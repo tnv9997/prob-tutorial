@@ -2234,6 +2234,1312 @@ const questionTemplates = [
       },
     ],
   },
+  // ============ FREQUENCY TABLES (concept: frequency_table) — Ch 11-1 ============
+  {
+    id: 'freq_table_animal_lengths',
+    concept: 'frequency_table',
+    difficulty: 1,
+    characterId: 'shambu',
+    keywords: ['frequency_table_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName} is studying lizards in the desert! He recorded the lengths (in inches) of ${p.total} lizards he found. The data is organized in a **frequency table** with intervals. The intervals are: 1.0–2.9 (${p.freq1} lizards), 3.0–4.9 (${p.freq2} lizards), 5.0–6.9 (${p.freq3} lizards), and 7.0–8.9 (${p.freq4} lizards).`,
+    paramGenerator: () => {
+      const freq1 = 3 + Math.floor(Math.random() * 5);
+      const freq2 = 4 + Math.floor(Math.random() * 6);
+      const freq3 = 2 + Math.floor(Math.random() * 5);
+      const freq4 = 1 + Math.floor(Math.random() * 4);
+      const total = freq1 + freq2 + freq3 + freq4;
+      const middleTwo = freq2 + freq3;
+      const pct = Math.round((middleTwo / total) * 100);
+      return { freq1, freq2, freq3, freq4, total, middleTwo, pct };
+    },
+    steps: [
+      {
+        prompt: 'How many lizards did {character} record in total?',
+        computeAnswer: (p) => p.total,
+        acceptFormats: ['integer'],
+        hint: 'Add the **frequencies** from all intervals: {freq1} + {freq2} + {freq3} + {freq4}.',
+        theory: 'The total is the sum of all **frequencies** in the table. Total = {freq1} + {freq2} + {freq3} + {freq4} = {total}.',
+        formula: 'Total = sum of all frequencies',
+        miniExample: 'If a table has frequencies 5, 8, 3, then total = 5 + 8 + 3 = 16.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '1.0–2.9', count: p.freq1 },
+            { label: '3.0–4.9', count: p.freq2 },
+            { label: '5.0–6.9', count: p.freq3 },
+            { label: '7.0–8.9', count: p.freq4 },
+          ],
+          highlight: null,
+        }),
+      },
+      {
+        prompt: 'How many lizards had lengths from 3.0 to 6.9 inches? (Add the two middle intervals.)',
+        computeAnswer: (p) => p.middleTwo,
+        acceptFormats: ['integer'],
+        hint: 'The **intervals** 3.0–4.9 and 5.0–6.9 cover 3.0 to 6.9. Add their **frequencies**.',
+        theory: 'Lizards from 3.0 to 6.9 inches = frequency of 3.0–4.9 + frequency of 5.0–6.9 = {freq2} + {freq3} = {middleTwo}.',
+        formula: 'Combined frequency = sum of frequencies for selected intervals',
+        miniExample: 'If interval A has 7 items and interval B has 4, together they have 7 + 4 = 11 items.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '1.0–2.9', count: p.freq1 },
+            { label: '3.0–4.9', count: p.freq2 },
+            { label: '5.0–6.9', count: p.freq3 },
+            { label: '7.0–8.9', count: p.freq4 },
+          ],
+          highlight: 1,
+        }),
+      },
+      {
+        prompt: 'What percent of all lizard lengths are from 3.0 to 6.9 inches? (Round to the nearest whole number.)',
+        computeAnswer: (p) => p.pct,
+        acceptFormats: ['integer'],
+        hint: 'Percent = (combined frequency / total) × 100 = ({middleTwo} / {total}) × 100.',
+        theory: 'Percent = ({middleTwo} / {total}) × 100 = {pct}%. This tells us {pct}% of all lizards had lengths in that range.',
+        formula: 'Percent = (part / total) × 100',
+        miniExample: 'If 6 out of 20 lizards are in an interval, percent = (6/20) × 100 = 30%.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'freq_table_book_prices',
+    concept: 'frequency_table',
+    difficulty: 1,
+    characterId: 'suppandi',
+    keywords: ['frequency_table_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName}'s boss sent him to organize a used book sale. He sorted ${p.total} books by price into a **frequency table**: $1.00–$1.99 (${p.f1} books), $2.00–$2.99 (${p.f2} books), $3.00–$3.99 (${p.f3} books), $4.00–$4.99 (${p.f4} books), $5.00–$5.99 (${p.f5} books). "See boss, all sorted!"`,
+    paramGenerator: () => {
+      const f1 = 2 + Math.floor(Math.random() * 4);
+      const f2 = 3 + Math.floor(Math.random() * 5);
+      const f3 = 4 + Math.floor(Math.random() * 5);
+      const f4 = 2 + Math.floor(Math.random() * 4);
+      const f5 = 1 + Math.floor(Math.random() * 3);
+      const total = f1 + f2 + f3 + f4 + f5;
+      const freqs = [f1, f2, f3, f4, f5];
+      const maxFreq = Math.max(...freqs);
+      const maxIdx = freqs.indexOf(maxFreq);
+      const labels = ['$1–$1.99', '$2–$2.99', '$3–$3.99', '$4–$4.99', '$5–$5.99'];
+      return { f1, f2, f3, f4, f5, total, maxFreq, mostCommonLabel: labels[maxIdx], mostCommonAnswer: maxIdx + 1 };
+    },
+    steps: [
+      {
+        prompt: 'How many books are at the sale in total?',
+        computeAnswer: (p) => p.total,
+        acceptFormats: ['integer'],
+        hint: 'Add all the **frequencies**: {f1} + {f2} + {f3} + {f4} + {f5}.',
+        theory: 'Total books = {f1} + {f2} + {f3} + {f4} + {f5} = {total}. The total frequency counts every item in the data set.',
+        formula: 'Total = sum of all frequencies',
+        miniExample: 'Frequencies of 3, 5, 2 gives total = 3 + 5 + 2 = 10.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '$1–$1.99', count: p.f1 },
+            { label: '$2–$2.99', count: p.f2 },
+            { label: '$3–$3.99', count: p.f3 },
+            { label: '$4–$4.99', count: p.f4 },
+            { label: '$5–$5.99', count: p.f5 },
+          ],
+          highlight: null,
+        }),
+      },
+      {
+        prompt: 'What is the highest frequency (the count for the most common price interval)?',
+        computeAnswer: (p) => p.maxFreq,
+        acceptFormats: ['integer'],
+        hint: 'Look at the **frequency** for each interval. Which one has the most books?',
+        theory: 'The highest frequency is {maxFreq}, which is the {mostCommonLabel} interval. This is the most common price range.',
+        formula: 'Most common interval = the interval with the highest frequency',
+        miniExample: 'If frequencies are 3, 7, 5, the highest frequency is 7.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '$1–$1.99', count: p.f1 },
+            { label: '$2–$2.99', count: p.f2 },
+            { label: '$3–$3.99', count: p.f3 },
+            { label: '$4–$4.99', count: p.f4 },
+            { label: '$5–$5.99', count: p.f5 },
+          ],
+          highlight: p.mostCommonLabel,
+        }),
+      },
+    ],
+  },
+  {
+    id: 'freq_table_test_scores',
+    concept: 'frequency_table',
+    difficulty: 2,
+    characterId: 'mahisha',
+    keywords: ['frequency_table_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName} organized a math quiz competition! He recorded ${p.total} students' scores in a **frequency table**: 50–59 (${p.f1} students), 60–69 (${p.f2} students), 70–79 (${p.f3} students), 80–89 (${p.f4} students), 90–100 (${p.f5} students).`,
+    paramGenerator: () => {
+      const f1 = 1 + Math.floor(Math.random() * 3);
+      const f2 = 3 + Math.floor(Math.random() * 4);
+      const f3 = 5 + Math.floor(Math.random() * 5);
+      const f4 = 3 + Math.floor(Math.random() * 5);
+      const f5 = 1 + Math.floor(Math.random() * 4);
+      const total = f1 + f2 + f3 + f4 + f5;
+      const above80 = f4 + f5;
+      const pctAbove80 = Math.round((above80 / total) * 100);
+      return { f1, f2, f3, f4, f5, total, above80, pctAbove80 };
+    },
+    steps: [
+      {
+        prompt: 'How many students scored 80 or above?',
+        computeAnswer: (p) => p.above80,
+        acceptFormats: ['integer'],
+        hint: 'Add the frequencies for the 80–89 and 90–100 intervals.',
+        theory: 'Students scoring 80+ = {f4} (80–89) + {f5} (90–100) = {above80}.',
+        formula: 'Count in range = sum of frequencies for those intervals',
+        miniExample: 'If 80–89 has 6 students and 90–100 has 3, then 80+ = 6 + 3 = 9 students.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '50–59', count: p.f1 },
+            { label: '60–69', count: p.f2 },
+            { label: '70–79', count: p.f3 },
+            { label: '80–89', count: p.f4 },
+            { label: '90–100', count: p.f5 },
+          ],
+          highlight: 3,
+        }),
+      },
+      {
+        prompt: 'What percent of students scored 80 or above? (Round to the nearest whole number.)',
+        computeAnswer: (p) => p.pctAbove80,
+        acceptFormats: ['integer'],
+        hint: 'Percent = (students scoring 80+ / total students) × 100.',
+        theory: 'Percent = ({above80} / {total}) × 100 = {pctAbove80}%.',
+        formula: 'Percent = (part / total) × 100',
+        miniExample: 'If 9 out of 25 students scored 80+, percent = (9/25) × 100 = 36%.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+
+  // ============ HISTOGRAMS (concept: histogram) — Ch 11-2 ============
+  {
+    id: 'histogram_game_scores',
+    concept: 'histogram',
+    difficulty: 1,
+    characterId: 'shakuni',
+    keywords: ['histogram_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName} Mama is analyzing scores from a board game tournament! A **histogram** shows the winning scores: 0–9 (${p.f1} games), 10–19 (${p.f2} games), 20–29 (${p.f3} games), 30–39 (${p.f4} games), 40–49 (${p.f5} games).`,
+    paramGenerator: () => {
+      const f1 = 1 + Math.floor(Math.random() * 3);
+      const f2 = 3 + Math.floor(Math.random() * 5);
+      const f3 = 5 + Math.floor(Math.random() * 6);
+      const f4 = 3 + Math.floor(Math.random() * 5);
+      const f5 = 1 + Math.floor(Math.random() * 3);
+      const total = f1 + f2 + f3 + f4 + f5;
+      const above30 = f4 + f5;
+      return { f1, f2, f3, f4, f5, total, above30 };
+    },
+    steps: [
+      {
+        prompt: 'How many total games are shown in the **histogram**?',
+        computeAnswer: (p) => p.total,
+        acceptFormats: ['integer'],
+        hint: 'A **histogram** shows frequencies using bar heights. Add all the frequencies together.',
+        theory: 'Total games = {f1} + {f2} + {f3} + {f4} + {f5} = {total}. In a **histogram**, each bar represents one **interval**.',
+        formula: 'Total = sum of all bar heights (frequencies)',
+        miniExample: 'If bars show 2, 5, 8, 4, then total = 2 + 5 + 8 + 4 = 19.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '0–9', count: p.f1 },
+            { label: '10–19', count: p.f2 },
+            { label: '20–29', count: p.f3 },
+            { label: '30–39', count: p.f4 },
+            { label: '40–49', count: p.f5 },
+          ],
+          highlight: null,
+        }),
+      },
+      {
+        prompt: 'How many games had a winning score of 30 or more?',
+        computeAnswer: (p) => p.above30,
+        acceptFormats: ['integer'],
+        hint: 'Add the frequencies for the 30–39 and 40–49 **intervals**.',
+        theory: 'Games with score 30+ = {f4} (30–39) + {f5} (40–49) = {above30}.',
+        formula: 'Count above threshold = sum of frequencies for intervals at or above threshold',
+        miniExample: 'If 30–39 has 6 games and 40–49 has 2, then 30+ = 6 + 2 = 8 games.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '0–9', count: p.f1 },
+            { label: '10–19', count: p.f2 },
+            { label: '20–29', count: p.f3 },
+            { label: '30–39', count: p.f4 },
+            { label: '40–49', count: p.f5 },
+          ],
+          highlight: 3,
+        }),
+      },
+    ],
+  },
+  {
+    id: 'histogram_ages',
+    concept: 'histogram',
+    difficulty: 1,
+    characterId: 'mahisha',
+    keywords: ['histogram_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName} is organizing a community event! He made a **histogram** of attendee ages: 10–19 (${p.f1} people), 20–29 (${p.f2} people), 30–39 (${p.f3} people), 40–49 (${p.f4} people), 50–59 (${p.f5} people).`,
+    paramGenerator: () => {
+      const f1 = 4 + Math.floor(Math.random() * 6);
+      const f2 = 6 + Math.floor(Math.random() * 8);
+      const f3 = 5 + Math.floor(Math.random() * 7);
+      const f4 = 3 + Math.floor(Math.random() * 5);
+      const f5 = 2 + Math.floor(Math.random() * 4);
+      const total = f1 + f2 + f3 + f4 + f5;
+      const freqs = [f1, f2, f3, f4, f5];
+      const maxFreq = Math.max(...freqs);
+      const minFreq = Math.min(...freqs);
+      const diff = maxFreq - minFreq;
+      return { f1, f2, f3, f4, f5, total, maxFreq, minFreq, diff };
+    },
+    steps: [
+      {
+        prompt: 'What is the frequency of the tallest bar in the **histogram**?',
+        computeAnswer: (p) => p.maxFreq,
+        acceptFormats: ['integer'],
+        hint: 'The tallest bar has the greatest **frequency**. Compare all the bar heights.',
+        theory: 'The tallest bar has a frequency of {maxFreq}. This means the most people fall in that age **interval**.',
+        formula: 'Tallest bar = highest frequency',
+        miniExample: 'If bars have heights 4, 9, 6, the tallest bar has frequency 9.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '10–19', count: p.f1 },
+            { label: '20–29', count: p.f2 },
+            { label: '30–39', count: p.f3 },
+            { label: '40–49', count: p.f4 },
+            { label: '50–59', count: p.f5 },
+          ],
+          highlight: null,
+        }),
+      },
+      {
+        prompt: 'What is the difference between the highest and lowest frequency?',
+        computeAnswer: (p) => p.diff,
+        acceptFormats: ['integer'],
+        hint: 'Find the tallest and shortest bars, then subtract: {maxFreq} − {minFreq}.',
+        theory: 'Difference = highest frequency − lowest frequency = {maxFreq} − {minFreq} = {diff}.',
+        formula: 'Difference = max frequency − min frequency',
+        miniExample: 'If highest bar = 12 and lowest = 3, difference = 12 − 3 = 9.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '10–19', count: p.f1 },
+            { label: '20–29', count: p.f2 },
+            { label: '30–39', count: p.f3 },
+            { label: '40–49', count: p.f4 },
+            { label: '50–59', count: p.f5 },
+          ],
+          highlight: null,
+        }),
+      },
+    ],
+  },
+  {
+    id: 'histogram_temperatures',
+    concept: 'histogram',
+    difficulty: 2,
+    characterId: 'shambu',
+    keywords: ['histogram_kw', 'interval', 'frequency'],
+    storyTemplateFn: (p, charName) => `${charName} tracked daily high temperatures (°F) while camping for ${p.total} days. His **histogram**: 60–69°F (${p.f1} days), 70–79°F (${p.f2} days), 80–89°F (${p.f3} days), 90–99°F (${p.f4} days).`,
+    paramGenerator: () => {
+      const f1 = 2 + Math.floor(Math.random() * 4);
+      const f2 = 4 + Math.floor(Math.random() * 6);
+      const f3 = 5 + Math.floor(Math.random() * 6);
+      const f4 = 1 + Math.floor(Math.random() * 4);
+      const total = f1 + f2 + f3 + f4;
+      const below80 = f1 + f2;
+      const pctBelow80 = Math.round((below80 / total) * 100);
+      return { f1, f2, f3, f4, total, below80, pctBelow80 };
+    },
+    steps: [
+      {
+        prompt: 'On how many days was the temperature below 80°F?',
+        computeAnswer: (p) => p.below80,
+        acceptFormats: ['integer'],
+        hint: 'Temperatures below 80°F fall in the 60–69 and 70–79 **intervals**.',
+        theory: 'Days below 80°F = {f1} (60–69) + {f2} (70–79) = {below80}.',
+        formula: 'Count in range = sum of matching interval frequencies',
+        miniExample: 'If 60–69 has 3 days and 70–79 has 7 days, below 80°F = 3 + 7 = 10 days.',
+        visual: 'histogram',
+        visualParams: (p) => ({
+          intervals: [
+            { label: '60–69°F', count: p.f1 },
+            { label: '70–79°F', count: p.f2 },
+            { label: '80–89°F', count: p.f3 },
+            { label: '90–99°F', count: p.f4 },
+          ],
+          highlight: 0,
+        }),
+      },
+      {
+        prompt: 'What percent of the days had temperatures below 80°F? (Round to nearest whole number.)',
+        computeAnswer: (p) => p.pctBelow80,
+        acceptFormats: ['integer'],
+        hint: 'Percent = (days below 80 / total days) × 100 = ({below80} / {total}) × 100.',
+        theory: 'Percent = ({below80} / {total}) × 100 = {pctBelow80}%.',
+        formula: 'Percent = (part / total) × 100',
+        miniExample: 'If 10 out of 28 days were below 80°F, percent = (10/28) × 100 ≈ 36%.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+
+  // ============ CIRCLE GRAPHS (concept: circle_graph) — Ch 11-3 ============
+  {
+    id: 'circle_energy_sources',
+    concept: 'circle_graph',
+    difficulty: 1,
+    characterId: 'nithyananda',
+    keywords: ['circle_graph_kw'],
+    storyTemplateFn: (p, charName) => `${charName} is studying a **circle graph** showing energy sources for a city. The graph shows: Solar ${p.solar}%, Wind ${p.wind}%, Coal ${p.coal}%, Natural Gas ${p.gas}%, and Other is the remaining percent.`,
+    paramGenerator: () => {
+      const solar = 10 + Math.floor(Math.random() * 15);
+      const wind = 10 + Math.floor(Math.random() * 15);
+      const coal = 15 + Math.floor(Math.random() * 15);
+      const gas = 15 + Math.floor(Math.random() * 15);
+      const other = 100 - solar - wind - coal - gas;
+      const solarDeg = Math.round((solar / 100) * 360);
+      return { solar, wind, coal, gas, other: Math.max(1, other), solarDeg };
+    },
+    steps: [
+      {
+        prompt: 'What percent does the "Other" category represent in the **circle graph**?',
+        computeAnswer: (p) => Math.max(1, p.other),
+        acceptFormats: ['integer'],
+        hint: 'All sections of a **circle graph** must add up to 100%. Subtract the known percentages from 100.',
+        theory: 'Other = 100% − {solar}% − {wind}% − {coal}% − {gas}% = {other}%. A **circle graph** always totals 100%.',
+        formula: 'Missing % = 100% − sum of all known percentages',
+        miniExample: 'If three categories are 30%, 25%, and 20%, the missing one = 100 − 30 − 25 − 20 = 25%.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Solar', percent: p.solar, color: '#EAB308' },
+            { label: 'Wind', percent: p.wind, color: '#3B82F6' },
+            { label: 'Coal', percent: p.coal, color: '#6B7280' },
+            { label: 'Gas', percent: p.gas, color: '#F97316' },
+            { label: 'Other', percent: Math.max(1, p.other), color: '#22C55E' },
+          ],
+          highlight: 'Other',
+        }),
+      },
+      {
+        prompt: 'How many degrees does the Solar section take up in the circle? (Round to the nearest whole number.)',
+        computeAnswer: (p) => p.solarDeg,
+        acceptFormats: ['integer'],
+        hint: 'A full circle is 360°. Degrees = (percent / 100) × 360.',
+        theory: 'Solar degrees = ({solar} / 100) × 360 = {solarDeg}°. Each 1% of a **circle graph** = 3.6°.',
+        formula: 'Degrees = (percent / 100) × 360',
+        miniExample: 'If a section is 25%, its degrees = (25/100) × 360 = 90°.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Solar', percent: p.solar, color: '#EAB308' },
+            { label: 'Wind', percent: p.wind, color: '#3B82F6' },
+            { label: 'Coal', percent: p.coal, color: '#6B7280' },
+            { label: 'Gas', percent: p.gas, color: '#F97316' },
+            { label: 'Other', percent: Math.max(1, p.other), color: '#22C55E' },
+          ],
+          highlight: 'Solar',
+        }),
+      },
+    ],
+  },
+  {
+    id: 'circle_time_spent',
+    concept: 'circle_graph',
+    difficulty: 1,
+    characterId: 'suppandi',
+    keywords: ['circle_graph_kw'],
+    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to make a **circle graph** of how he spends his day. ${charName} reported: Sleeping ${p.sleep}%, Working ${p.work}%, Eating ${p.eat}%, Playing ${p.play}%, and the rest is "Thinking about marbles."`,
+    paramGenerator: () => {
+      const sleep = 30 + Math.floor(Math.random() * 8);
+      const work = 20 + Math.floor(Math.random() * 10);
+      const eat = 8 + Math.floor(Math.random() * 7);
+      const play = 10 + Math.floor(Math.random() * 8);
+      const marbles = 100 - sleep - work - eat - play;
+      const workDeg = Math.round((work / 100) * 360);
+      return { sleep, work, eat, play, marbles: Math.max(1, marbles), workDeg };
+    },
+    steps: [
+      {
+        prompt: 'What percent of the day does {character} spend "Thinking about marbles"?',
+        computeAnswer: (p) => Math.max(1, p.marbles),
+        acceptFormats: ['integer'],
+        hint: 'All categories in a **circle graph** add to 100%. Subtract the others from 100.',
+        theory: 'Marbles = 100 − {sleep} − {work} − {eat} − {play} = {marbles}%.',
+        formula: 'Missing % = 100 − sum of known %',
+        miniExample: 'If Sleep=33%, Work=25%, Eat=10%, Play=12%, then Missing = 100−33−25−10−12 = 20%.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Sleeping', percent: p.sleep, color: '#6366F1' },
+            { label: 'Working', percent: p.work, color: '#F97316' },
+            { label: 'Eating', percent: p.eat, color: '#EAB308' },
+            { label: 'Playing', percent: p.play, color: '#22C55E' },
+            { label: 'Marbles', percent: Math.max(1, p.marbles), color: '#EC4899' },
+          ],
+          highlight: 'Marbles',
+        }),
+      },
+      {
+        prompt: 'How many degrees does the "Working" section span? (Round to nearest whole number.)',
+        computeAnswer: (p) => p.workDeg,
+        acceptFormats: ['integer'],
+        hint: 'Degrees = (percent / 100) × 360 = ({work} / 100) × 360.',
+        theory: 'Working degrees = ({work} / 100) × 360 = {workDeg}°.',
+        formula: 'Degrees = (percent / 100) × 360',
+        miniExample: 'If a section is 20%, degrees = (20/100) × 360 = 72°.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Sleeping', percent: p.sleep, color: '#6366F1' },
+            { label: 'Working', percent: p.work, color: '#F97316' },
+            { label: 'Eating', percent: p.eat, color: '#EAB308' },
+            { label: 'Playing', percent: p.play, color: '#22C55E' },
+            { label: 'Marbles', percent: Math.max(1, p.marbles), color: '#EC4899' },
+          ],
+          highlight: 'Working',
+        }),
+      },
+    ],
+  },
+  {
+    id: 'circle_food_budget',
+    concept: 'circle_graph',
+    difficulty: 2,
+    characterId: 'bheema',
+    keywords: ['circle_graph_kw'],
+    storyTemplateFn: (p, charName) => `${charName} made a **circle graph** of his monthly food budget of $${p.budget}: Rice & Grains ${p.grains}%, Vegetables ${p.veg}%, Fruits ${p.fruit}%, Sweets ${p.sweets}%, and Snacks make up the rest.`,
+    paramGenerator: () => {
+      const grains = 25 + Math.floor(Math.random() * 10);
+      const veg = 15 + Math.floor(Math.random() * 10);
+      const fruit = 10 + Math.floor(Math.random() * 8);
+      const sweets = 10 + Math.floor(Math.random() * 10);
+      const snacks = 100 - grains - veg - fruit - sweets;
+      const budget = 200 + Math.floor(Math.random() * 6) * 50;
+      const sweetsDollars = Math.round((sweets / 100) * budget);
+      return { grains, veg, fruit, sweets, snacks: Math.max(1, snacks), budget, sweetsDollars };
+    },
+    steps: [
+      {
+        prompt: 'What percent goes to Snacks?',
+        computeAnswer: (p) => Math.max(1, p.snacks),
+        acceptFormats: ['integer'],
+        hint: 'The **circle graph** totals 100%. Subtract all known categories.',
+        theory: 'Snacks = 100 − {grains} − {veg} − {fruit} − {sweets} = {snacks}%.',
+        formula: 'Missing % = 100 − sum of known %',
+        miniExample: 'If categories total 85%, the missing one is 100 − 85 = 15%.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Grains', percent: p.grains, color: '#D97706' },
+            { label: 'Veggies', percent: p.veg, color: '#22C55E' },
+            { label: 'Fruits', percent: p.fruit, color: '#EF4444' },
+            { label: 'Sweets', percent: p.sweets, color: '#EC4899' },
+            { label: 'Snacks', percent: Math.max(1, p.snacks), color: '#8B5CF6' },
+          ],
+          highlight: 'Snacks',
+        }),
+      },
+      {
+        prompt: 'How many dollars does {character} spend on Sweets?',
+        computeAnswer: (p) => p.sweetsDollars,
+        acceptFormats: ['integer'],
+        hint: 'Dollars = (percent / 100) × total budget = ({sweets} / 100) × {budget}.',
+        theory: 'Sweets spending = ({sweets} / 100) × ${budget} = ${sweetsDollars}.',
+        formula: 'Amount = (percent / 100) × total',
+        miniExample: 'If Sweets is 15% of a $300 budget, amount = (15/100) × 300 = $45.',
+        visual: 'circle_graph',
+        visualParams: (p) => ({
+          segments: [
+            { label: 'Grains', percent: p.grains, color: '#D97706' },
+            { label: 'Veggies', percent: p.veg, color: '#22C55E' },
+            { label: 'Fruits', percent: p.fruit, color: '#EF4444' },
+            { label: 'Sweets', percent: p.sweets, color: '#EC4899' },
+            { label: 'Snacks', percent: Math.max(1, p.snacks), color: '#8B5CF6' },
+          ],
+          highlight: 'Sweets',
+        }),
+      },
+    ],
+  },
+
+  // ============ CENTRAL TENDENCY (concept: central_tendency) — Ch 11-4 ============
+  {
+    id: 'central_prices',
+    concept: 'central_tendency',
+    difficulty: 1,
+    characterId: 'suppandi',
+    keywords: ['mean', 'median', 'mode', 'range'],
+    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to find the average price of backpacks in the store. The prices (in dollars) are: ${p.data.join(', ')}. "Average? I'll just pick the middle one!" said ${charName}. Let's help him do it properly.`,
+    paramGenerator: () => {
+      const n = 5;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(20 + Math.floor(Math.random() * 30));
+      data.sort((a, b) => a - b);
+      const sum = data.reduce((s, v) => s + v, 0);
+      const mean = Math.round(sum / n * 10) / 10;
+      const median = data[Math.floor(n / 2)];
+      const rangeVal = data[n - 1] - data[0];
+      return { data, n, sum, mean, median, rangeVal };
+    },
+    steps: [
+      {
+        prompt: 'What is the sum of all the prices?',
+        computeAnswer: (p) => p.sum,
+        acceptFormats: ['integer'],
+        hint: 'Add all the values: {data}.',
+        theory: 'Sum = {data} added together = {sum}. The sum is the first step in calculating the **mean**.',
+        formula: 'Sum = add all data values',
+        miniExample: 'If prices are 20, 30, 40, the sum = 20 + 30 + 40 = 90.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **mean** (average) price? (Round to one decimal if needed, e.g. 34.5)',
+        computeAnswer: (p) => p.mean,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** = sum / number of values = {sum} / {n}.',
+        theory: '**Mean** = {sum} / {n} = {mean}. The **mean** is the "balance point" of the data.',
+        formula: 'Mean = sum of values / number of values',
+        miniExample: 'If sum = 90 and there are 3 values, mean = 90/3 = 30.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **range** of the prices?',
+        computeAnswer: (p) => p.rangeVal,
+        acceptFormats: ['integer'],
+        hint: '**Range** = highest value − lowest value.',
+        theory: '**Range** = {data} → max is {data[' + 'n-1' + ']} and min is {data[0]}, so **range** = ' + '{rangeVal}.',
+        formula: 'Range = maximum − minimum',
+        miniExample: 'If prices go from $20 to $48, range = 48 − 20 = $28.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'central_quiz_scores',
+    concept: 'central_tendency',
+    difficulty: 1,
+    characterId: 'mahisha',
+    keywords: ['mean', 'median', 'mode'],
+    storyTemplateFn: (p, charName) => `${charName} recorded quiz scores for 7 students: ${p.data.join(', ')}. He needs to find the **median** score to give an award to the "middle" student.`,
+    paramGenerator: () => {
+      const data = [];
+      for (let i = 0; i < 7; i++) data.push(5 + Math.floor(Math.random() * 11));
+      data.sort((a, b) => a - b);
+      const median = data[3];
+      const sum = data.reduce((s, v) => s + v, 0);
+      const mean = Math.round(sum / 7 * 10) / 10;
+      return { data, median, sum, mean };
+    },
+    steps: [
+      {
+        prompt: 'The scores in order are: {data}. What is the **median**?',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['integer'],
+        hint: 'The **median** is the middle value when data is in order. With 7 values, the middle one is the 4th.',
+        theory: 'With 7 values in order, the **median** is the 4th value = {median}. For an odd number of values, the **median** is simply the middle one.',
+        formula: 'For n values: median is at position (n + 1) / 2',
+        miniExample: 'Data: 3, 5, 7, 9, 11 → median = 7 (the 3rd value out of 5).',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **mean** score? (Round to one decimal.)',
+        computeAnswer: (p) => p.mean,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** = sum of all scores / number of students = {sum} / 7.',
+        theory: '**Mean** = {sum} / 7 = {mean}. Compare this to the **median** ({median}) — they may differ!',
+        formula: 'Mean = sum / count',
+        miniExample: 'Scores 6, 8, 10 → mean = 24/3 = 8.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'central_animal_data',
+    concept: 'central_tendency',
+    difficulty: 2,
+    characterId: 'shambu',
+    keywords: ['mean', 'median', 'mode', 'range'],
+    storyTemplateFn: (p, charName) => `${charName} measured the lengths (in inches) of ${p.n} fish he caught: ${p.data.join(', ')}. He wants to describe this data using **measures of central tendency**.`,
+    paramGenerator: () => {
+      const n = 8;
+      const base = 8 + Math.floor(Math.random() * 5);
+      const data = [];
+      // Ensure at least one repeated value for mode
+      const modeVal = base + Math.floor(Math.random() * 5);
+      data.push(modeVal, modeVal);
+      for (let i = 2; i < n; i++) data.push(base + Math.floor(Math.random() * 12));
+      data.sort((a, b) => a - b);
+      const sum = data.reduce((s, v) => s + v, 0);
+      const mean = Math.round(sum / n * 10) / 10;
+      const median = Math.round(((data[3] + data[4]) / 2) * 10) / 10;
+      const rangeVal = data[n - 1] - data[0];
+      // Find mode
+      const freq = {};
+      data.forEach(v => { freq[v] = (freq[v] || 0) + 1; });
+      const maxF = Math.max(...Object.values(freq));
+      const mode = Number(Object.keys(freq).find(k => freq[k] === maxF));
+      return { data, n, sum, mean, median, rangeVal, mode };
+    },
+    steps: [
+      {
+        prompt: 'What is the **mean** length? (Round to one decimal.)',
+        computeAnswer: (p) => p.mean,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** = sum of all lengths / count. Sum = {sum}, count = {n}.',
+        theory: '**Mean** = {sum} / {n} = {mean} inches.',
+        formula: 'Mean = sum / count',
+        miniExample: 'Fish lengths 8, 10, 12 → mean = 30/3 = 10 inches.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **median** length? (With {n} values, average the two middle ones.)',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'With {n} (even) values sorted, the **median** is the average of the 4th and 5th values.',
+        theory: '**Median** = (4th + 5th value) / 2 = {median}. With an even count, average the two middle values.',
+        formula: 'Median (even n) = (value at n/2 + value at n/2 + 1) / 2',
+        miniExample: 'Data: 3, 5, 7, 9 → median = (5 + 7) / 2 = 6.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **mode** of the data?',
+        computeAnswer: (p) => p.mode,
+        acceptFormats: ['integer'],
+        hint: 'The **mode** is the value that appears most often. Look for repeated numbers in: {data}.',
+        theory: 'The **mode** is {mode} because it appears more often than any other value in the data set.',
+        formula: 'Mode = value with highest frequency',
+        miniExample: 'Data: 5, 7, 7, 8, 10 → mode = 7 (appears twice).',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+
+  // ============ MEASURES OF VARIATION (concept: measures_of_variation) — Ch 11-5 ============
+  {
+    id: 'variation_animal_weights',
+    concept: 'measures_of_variation',
+    difficulty: 2,
+    characterId: 'shambu',
+    keywords: ['range', 'quartile', 'interquartile_range', 'median'],
+    storyTemplateFn: (p, charName) => `${charName} weighed ${p.n} wild cats (in pounds): ${p.data.join(', ')}. He wants to describe the spread using **measures of variation**.`,
+    paramGenerator: () => {
+      const n = 8;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(5 + Math.floor(Math.random() * 45));
+      data.sort((a, b) => a - b);
+      const rangeVal = data[n - 1] - data[0];
+      const median = Math.round(((data[3] + data[4]) / 2) * 10) / 10;
+      const lowerHalf = data.slice(0, 4);
+      const upperHalf = data.slice(4);
+      const q1 = Math.round(((lowerHalf[1] + lowerHalf[2]) / 2) * 10) / 10;
+      const q3 = Math.round(((upperHalf[1] + upperHalf[2]) / 2) * 10) / 10;
+      const iqr = Math.round((q3 - q1) * 10) / 10;
+      return { data, n, rangeVal, median, q1, q3, iqr };
+    },
+    steps: [
+      {
+        prompt: 'What is the **range** of the weights?',
+        computeAnswer: (p) => p.rangeVal,
+        acceptFormats: ['integer'],
+        hint: '**Range** = maximum − minimum = {data[7]} − {data[0]}.',
+        theory: '**Range** = {data[7]} − {data[0]} = {rangeVal}. The **range** tells how spread out the entire data set is.',
+        formula: 'Range = max − min',
+        miniExample: 'Data: 5, 12, 20, 35, 48 → range = 48 − 5 = 43.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is Q1 (the first **quartile**)? Data: {data}',
+        computeAnswer: (p) => p.q1,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Q1 is the **median** of the lower half of the data (first 4 values). Average the 2nd and 3rd values of the lower half.',
+        theory: 'Lower half: {data[0]}, {data[1]}, {data[2]}, {data[3]}. Q1 = ({data[1]} + {data[2]}) / 2 = {q1}.',
+        formula: 'Q1 = median of the lower half of the sorted data',
+        miniExample: 'Lower half: 5, 8, 12, 15 → Q1 = (8 + 12) / 2 = 10.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **interquartile range** (IQR)? Q1 = {q1}, Q3 = {q3}.',
+        computeAnswer: (p) => p.iqr,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**IQR** = Q3 − Q1 = {q3} − {q1}.',
+        theory: '**IQR** = Q3 − Q1 = {q3} − {q1} = {iqr}. The IQR measures the spread of the middle 50% of the data.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'If Q1 = 10 and Q3 = 25, IQR = 25 − 10 = 15.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'variation_temperatures',
+    concept: 'measures_of_variation',
+    difficulty: 2,
+    characterId: 'nithyananda',
+    keywords: ['range', 'quartile', 'interquartile_range', 'outlier'],
+    storyTemplateFn: (p, charName) => `${charName} recorded 8 daily temperatures (°F): ${p.data.join(', ')}. "The stars tell me there is an unusual value here!" Let's use **measures of variation** to investigate.`,
+    paramGenerator: () => {
+      const data = [];
+      const base = 65 + Math.floor(Math.random() * 10);
+      for (let i = 0; i < 7; i++) data.push(base + Math.floor(Math.random() * 15));
+      // Add an outlier
+      const outlierVal = base + 35 + Math.floor(Math.random() * 10);
+      data.push(outlierVal);
+      data.sort((a, b) => a - b);
+      const median = Math.round(((data[3] + data[4]) / 2) * 10) / 10;
+      const lH = data.slice(0, 4);
+      const uH = data.slice(4);
+      const q1 = Math.round(((lH[1] + lH[2]) / 2) * 10) / 10;
+      const q3 = Math.round(((uH[1] + uH[2]) / 2) * 10) / 10;
+      const iqr = Math.round((q3 - q1) * 10) / 10;
+      const upperFence = q3 + 1.5 * iqr;
+      const lowerFence = q1 - 1.5 * iqr;
+      const outliers = data.filter(v => v > upperFence || v < lowerFence);
+      const hasOutlier = outliers.length > 0 ? 'yes' : 'no';
+      return { data, median, q1, q3, iqr, outlierVal, hasOutlier, upperFence: Math.round(upperFence * 10) / 10 };
+    },
+    steps: [
+      {
+        prompt: 'What is the **median** temperature?',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'With 8 values sorted, the **median** is the average of the 4th and 5th values.',
+        theory: '**Median** = (4th + 5th values) / 2 = {median}°F.',
+        formula: 'Median (even n) = average of two middle values',
+        miniExample: 'Data: 60, 62, 68, 70, 72, 75, 78, 95 → median = (70+72)/2 = 71.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the IQR? (Q1 = {q1}, Q3 = {q3})',
+        computeAnswer: (p) => p.iqr,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**IQR** = Q3 − Q1.',
+        theory: '**IQR** = {q3} − {q1} = {iqr}.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'Q1 = 65, Q3 = 78 → IQR = 78 − 65 = 13.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'Is there an **outlier** in this data? (yes or no). An outlier is above Q3 + 1.5 × IQR = {upperFence}.',
+        computeAnswer: (p) => p.hasOutlier,
+        acceptFormats: ['yes/no'],
+        hint: 'Check if any value is greater than {upperFence} (= Q3 + 1.5 × IQR). The highest value is {data[7]}.',
+        theory: 'Upper fence = Q3 + 1.5 × IQR = {q3} + 1.5 × {iqr} = {upperFence}. Since {data[7]} > {upperFence}, {hasOutlier}, there is an **outlier**!',
+        formula: 'Outlier if value > Q3 + 1.5 × IQR or value < Q1 − 1.5 × IQR',
+        miniExample: 'If Q3 = 78, IQR = 13, upper fence = 78 + 19.5 = 97.5. A value of 100 would be an outlier.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'variation_race_times',
+    concept: 'measures_of_variation',
+    difficulty: 2,
+    characterId: 'mahisha',
+    keywords: ['range', 'quartile', 'interquartile_range', 'five_number_summary'],
+    storyTemplateFn: (p, charName) => `${charName} timed ${p.n} runners (in seconds): ${p.data.join(', ')}. He needs the **five-number summary** to make a box plot.`,
+    paramGenerator: () => {
+      const n = 10;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(50 + Math.floor(Math.random() * 40));
+      data.sort((a, b) => a - b);
+      const min = data[0];
+      const max = data[n - 1];
+      const median = (data[4] + data[5]) / 2;
+      const lH = data.slice(0, 5);
+      const uH = data.slice(5);
+      const q1 = lH[2];
+      const q3 = uH[2];
+      const iqr = q3 - q1;
+      return { data, n, min, max, median, q1, q3, iqr };
+    },
+    steps: [
+      {
+        prompt: 'What is the **range** of the running times?',
+        computeAnswer: (p) => p.max - p.min,
+        acceptFormats: ['integer'],
+        hint: '**Range** = max − min = {max} − {min}.',
+        theory: '**Range** = {max} − {min} = ' + '{iqr}. Wait — the range is max − min which is {max} − {min}.',
+        formula: 'Range = maximum − minimum',
+        miniExample: 'Times: 52, 60, 78 → range = 78 − 52 = 26 seconds.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is Q1 (first **quartile**)? The sorted data has {n} values — Q1 is the median of the first 5.',
+        computeAnswer: (p) => p.q1,
+        acceptFormats: ['integer', 'decimal'],
+        hint: 'Lower half: first 5 values. The middle (3rd) value of these 5 is Q1.',
+        theory: 'Lower half: {data[0]}, {data[1]}, {data[2]}, {data[3]}, {data[4]}. Q1 = {q1} (the 3rd value).',
+        formula: 'Q1 = median of the lower half',
+        miniExample: 'Lower half: 50, 55, 58, 62, 65 → Q1 = 58 (middle value).',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'iqr',
+        }),
+      },
+      {
+        prompt: 'What is the **IQR**? (Q1 = {q1}, Q3 = {q3})',
+        computeAnswer: (p) => p.iqr,
+        acceptFormats: ['integer'],
+        hint: '**IQR** = Q3 − Q1 = {q3} − {q1}.',
+        theory: '**IQR** = {q3} − {q1} = {iqr}. The IQR represents the spread of the middle 50% of runners.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'Q1 = 55, Q3 = 72 → IQR = 72 − 55 = 17.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'iqr',
+        }),
+      },
+    ],
+  },
+
+  // ============ BOX-AND-WHISKER PLOTS (concept: box_and_whisker) — Ch 11-6 ============
+  {
+    id: 'box_ages',
+    concept: 'box_and_whisker',
+    difficulty: 1,
+    characterId: 'mahisha',
+    keywords: ['box_and_whisker_kw', 'five_number_summary', 'quartile', 'median'],
+    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of the ages of ${p.n} children signed up for swimming. The five-number summary is: Min = ${p.min}, Q1 = ${p.q1}, Median = ${p.median}, Q3 = ${p.q3}, Max = ${p.max}.`,
+    paramGenerator: () => {
+      const n = 10;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(7 + Math.floor(Math.random() * 10));
+      data.sort((a, b) => a - b);
+      const min = data[0];
+      const max = data[n - 1];
+      const median = (data[4] + data[5]) / 2;
+      const q1 = data[2];
+      const q3 = data[7];
+      const iqr = q3 - q1;
+      const rangeVal = max - min;
+      return { data, n, min, max, median, q1, q3, iqr, rangeVal };
+    },
+    steps: [
+      {
+        prompt: 'What is the **range** of the ages?',
+        computeAnswer: (p) => p.rangeVal,
+        acceptFormats: ['integer'],
+        hint: '**Range** = Max − Min. Look at the ends of the whiskers.',
+        theory: '**Range** = {max} − {min} = {rangeVal}. The whiskers stretch from the minimum to the maximum.',
+        formula: 'Range = Max − Min',
+        miniExample: 'If whiskers go from 7 to 16, range = 16 − 7 = 9.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'range',
+        }),
+      },
+      {
+        prompt: 'What is the **interquartile range** (IQR)?',
+        computeAnswer: (p) => p.iqr,
+        acceptFormats: ['integer'],
+        hint: '**IQR** = Q3 − Q1 = {q3} − {q1}. The IQR is the width of the box.',
+        theory: '**IQR** = {q3} − {q1} = {iqr}. The box in a **box-and-whisker plot** shows the middle 50% of the data.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'If Q1 = 9 and Q3 = 14, IQR = 14 − 9 = 5.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'iqr',
+        }),
+      },
+      {
+        prompt: 'What is the **median** age shown on the box plot?',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['integer', 'decimal'],
+        hint: 'The **median** is the line inside the box.',
+        theory: 'The **median** = {median}. It divides the data into two equal halves. On the box plot, it is the vertical line inside the box.',
+        formula: 'Median = the line inside the box',
+        miniExample: 'The red/bold line inside the box shows the median value.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'median',
+        }),
+      },
+    ],
+  },
+  {
+    id: 'box_prices',
+    concept: 'box_and_whisker',
+    difficulty: 2,
+    characterId: 'suppandi',
+    keywords: ['box_and_whisker_kw', 'quartile', 'interquartile_range', 'median'],
+    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of bicycle prices at a sale. Min = $${p.min}, Q1 = $${p.q1}, Median = $${p.median}, Q3 = $${p.q3}, Max = $${p.max}. "Boss, the box tells us everything!"`,
+    paramGenerator: () => {
+      const min = 100 + Math.floor(Math.random() * 20) * 5;
+      const q1 = min + 10 + Math.floor(Math.random() * 5) * 5;
+      const median = q1 + 10 + Math.floor(Math.random() * 5) * 5;
+      const q3 = median + 10 + Math.floor(Math.random() * 5) * 5;
+      const max = q3 + 15 + Math.floor(Math.random() * 5) * 5;
+      const iqr = q3 - q1;
+      const pctBelow = 50; // by definition, 50% is below median
+      return { min, q1, median, q3, max, iqr, pctBelow };
+    },
+    steps: [
+      {
+        prompt: 'What is the IQR of the bicycle prices?',
+        computeAnswer: (p) => p.iqr,
+        acceptFormats: ['integer'],
+        hint: 'IQR = Q3 − Q1 = ${q3} − ${q1}.',
+        theory: 'IQR = ${q3} − ${q1} = ${iqr}. The box spans from Q1 to Q3.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'If Q1 = $130 and Q3 = $170, IQR = $170 − $130 = $40.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'iqr',
+        }),
+      },
+      {
+        prompt: 'What percent of the data falls below the **median**? (This is always the same for any box plot.)',
+        computeAnswer: () => 50,
+        acceptFormats: ['integer'],
+        hint: 'By definition, the **median** splits the data in half.',
+        theory: 'Exactly 50% of the data falls below the **median** and 50% above. That is the definition of **median**!',
+        formula: 'Median → 50% below, 50% above',
+        miniExample: 'No matter the data, the median always has 50% on each side.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+          highlight: 'median',
+        }),
+      },
+    ],
+  },
+  {
+    id: 'box_compare',
+    concept: 'box_and_whisker',
+    difficulty: 2,
+    characterId: 'shakuni',
+    keywords: ['box_and_whisker_kw', 'quartile', 'interquartile_range', 'range'],
+    storyTemplateFn: (p, charName) => `${charName} Mama is comparing scores from two board games using **box-and-whisker plots**. Game A: Min=${p.aMin}, Q1=${p.aQ1}, Median=${p.aMed}, Q3=${p.aQ3}, Max=${p.aMax}. Game B: Min=${p.bMin}, Q1=${p.bQ1}, Median=${p.bMed}, Q3=${p.bQ3}, Max=${p.bMax}.`,
+    paramGenerator: () => {
+      const aMin = 10 + Math.floor(Math.random() * 10);
+      const aQ1 = aMin + 5 + Math.floor(Math.random() * 5);
+      const aMed = aQ1 + 5 + Math.floor(Math.random() * 5);
+      const aQ3 = aMed + 5 + Math.floor(Math.random() * 5);
+      const aMax = aQ3 + 5 + Math.floor(Math.random() * 10);
+      const bMin = 15 + Math.floor(Math.random() * 10);
+      const bQ1 = bMin + 3 + Math.floor(Math.random() * 5);
+      const bMed = bQ1 + 3 + Math.floor(Math.random() * 8);
+      const bQ3 = bMed + 3 + Math.floor(Math.random() * 5);
+      const bMax = bQ3 + 3 + Math.floor(Math.random() * 8);
+      const aRange = aMax - aMin;
+      const bRange = bMax - bMin;
+      const greaterRange = aRange >= bRange ? aRange : bRange;
+      const aIqr = aQ3 - aQ1;
+      const bIqr = bQ3 - bQ1;
+      return { aMin, aQ1, aMed, aQ3, aMax, bMin, bQ1, bMed, bQ3, bMax, aRange, bRange, greaterRange, aIqr, bIqr };
+    },
+    steps: [
+      {
+        prompt: 'What is the **range** of Game A?',
+        computeAnswer: (p) => p.aRange,
+        acceptFormats: ['integer'],
+        hint: '**Range** of Game A = Max − Min = {aMax} − {aMin}.',
+        theory: 'Game A **range** = {aMax} − {aMin} = {aRange}.',
+        formula: 'Range = Max − Min',
+        miniExample: 'If Game A goes from 10 to 42, range = 42 − 10 = 32.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.aMin, q1: p.aQ1, median: p.aMed, q3: p.aQ3, max: p.aMax,
+          highlight: 'range',
+        }),
+      },
+      {
+        prompt: 'What is the IQR of Game B?',
+        computeAnswer: (p) => p.bIqr,
+        acceptFormats: ['integer'],
+        hint: 'Game B IQR = Q3 − Q1 = {bQ3} − {bQ1}.',
+        theory: 'Game B IQR = {bQ3} − {bQ1} = {bIqr}. A smaller IQR means scores are more consistent.',
+        formula: 'IQR = Q3 − Q1',
+        miniExample: 'Q1 = 20, Q3 = 35 → IQR = 35 − 20 = 15.',
+        visual: 'box_plot',
+        visualParams: (p) => ({
+          min: p.bMin, q1: p.bQ1, median: p.bMed, q3: p.bQ3, max: p.bMax,
+          highlight: 'iqr',
+        }),
+      },
+    ],
+  },
+
+  // ============ STEM-AND-LEAF PLOTS (concept: stem_and_leaf) — Ch 11-7 ============
+  {
+    id: 'stem_leaf_scores',
+    concept: 'stem_and_leaf',
+    difficulty: 1,
+    characterId: 'shakuni',
+    keywords: ['stem_and_leaf_kw', 'median', 'range'],
+    storyTemplateFn: (p, charName) => `${charName} Mama recorded scores from a card game tournament in a **stem-and-leaf plot**. The data has ${p.n} values ranging from ${p.min} to ${p.max}.`,
+    paramGenerator: () => {
+      const n = 11;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(55 + Math.floor(Math.random() * 30));
+      data.sort((a, b) => a - b);
+      const min = data[0];
+      const max = data[n - 1];
+      const median = data[5];
+      const rangeVal = max - min;
+      // Build stem-leaf structure
+      const stemMap = {};
+      data.forEach(v => {
+        const stem = Math.floor(v / 10);
+        const leaf = v % 10;
+        if (!stemMap[stem]) stemMap[stem] = [];
+        stemMap[stem].push(leaf);
+      });
+      const stems = Object.keys(stemMap).sort((a, b) => a - b).map(s => ({
+        stem: Number(s),
+        leaves: stemMap[s].sort((a, b) => a - b),
+      }));
+      return { data, n, min, max, median, rangeVal, stems };
+    },
+    steps: [
+      {
+        prompt: 'How many data values are in the **stem-and-leaf plot**? (Count all the leaves.)',
+        computeAnswer: (p) => p.n,
+        acceptFormats: ['integer'],
+        hint: 'Each leaf represents one data value. Count all the leaf digits across all stems.',
+        theory: 'Total values = total number of leaves = {n}. Each leaf is one data point.',
+        formula: 'Count = total number of leaves',
+        miniExample: 'If stem 5 has leaves 3, 7, 8 and stem 6 has leaves 1, 4, the total is 5 values.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+      {
+        prompt: 'What is the **median** of the data? (With {n} values, the median is the 6th value.)',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['integer'],
+        hint: 'Read the data in order from the **stem-and-leaf plot** and find the 6th value (middle of 11).',
+        theory: 'The 6th value in order is {median}. In a **stem-and-leaf plot**, data is already sorted!',
+        formula: 'Median of 11 values = 6th value',
+        miniExample: 'With 11 values, median is at position (11+1)/2 = 6th.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+      {
+        prompt: 'What is the **range** of the data?',
+        computeAnswer: (p) => p.rangeVal,
+        acceptFormats: ['integer'],
+        hint: '**Range** = largest value − smallest value = {max} − {min}.',
+        theory: '**Range** = {max} − {min} = {rangeVal}. Read the first leaf and last leaf from the plot.',
+        formula: 'Range = max − min',
+        miniExample: 'If data goes from 55 to 84, range = 84 − 55 = 29.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+    ],
+  },
+  {
+    id: 'stem_leaf_prices',
+    concept: 'stem_and_leaf',
+    difficulty: 1,
+    characterId: 'bheema',
+    keywords: ['stem_and_leaf_kw', 'median', 'mode'],
+    storyTemplateFn: (p, charName) => `${charName} listed food item prices (in dollars) in a **stem-and-leaf plot**. There are ${p.n} items with prices from $${p.min} to $${p.max}.`,
+    paramGenerator: () => {
+      const n = 9;
+      const data = [];
+      const modeVal = 20 + Math.floor(Math.random() * 20);
+      data.push(modeVal, modeVal);
+      for (let i = 2; i < n; i++) data.push(15 + Math.floor(Math.random() * 30));
+      data.sort((a, b) => a - b);
+      const min = data[0];
+      const max = data[n - 1];
+      const median = data[4];
+      // Build stems
+      const stemMap = {};
+      data.forEach(v => {
+        const stem = Math.floor(v / 10);
+        const leaf = v % 10;
+        if (!stemMap[stem]) stemMap[stem] = [];
+        stemMap[stem].push(leaf);
+      });
+      const stems = Object.keys(stemMap).sort((a, b) => a - b).map(s => ({
+        stem: Number(s),
+        leaves: stemMap[s].sort((a, b) => a - b),
+      }));
+      return { data, n, min, max, median, modeVal, stems };
+    },
+    steps: [
+      {
+        prompt: 'What is the **median** price? (With {n} values, it is the 5th value.)',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['integer'],
+        hint: 'Read all values in order from the **stem-and-leaf plot**. The 5th out of 9 is the **median**.',
+        theory: '**Median** = {median}. The data in a stem-and-leaf plot is already in order!',
+        formula: 'Median of 9 values = 5th value',
+        miniExample: 'Data: 15, 18, 22, 25, 28, 30, 33, 38, 42 → median = 28.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+      {
+        prompt: 'What is the **mode** (the value that appears most often)?',
+        computeAnswer: (p) => p.modeVal,
+        acceptFormats: ['integer'],
+        hint: 'Look for a leaf digit that appears more than once on the same stem.',
+        theory: '**Mode** = {modeVal} because it appears more than once. In a stem-and-leaf plot, repeated leaves on the same stem indicate the **mode**.',
+        formula: 'Mode = value with highest frequency',
+        miniExample: 'If stem 2 has leaves 5, 5, 8, then 25 appears twice — mode candidate.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+    ],
+  },
+  {
+    id: 'stem_leaf_general',
+    concept: 'stem_and_leaf',
+    difficulty: 2,
+    characterId: 'mahisha',
+    keywords: ['stem_and_leaf_kw', 'median', 'range', 'mean'],
+    storyTemplateFn: (p, charName) => `${charName} organized test scores for ${p.n} athletes into a **stem-and-leaf plot**. Scores range from ${p.min} to ${p.max}.`,
+    paramGenerator: () => {
+      const n = 10;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(60 + Math.floor(Math.random() * 35));
+      data.sort((a, b) => a - b);
+      const min = data[0];
+      const max = data[n - 1];
+      const median = (data[4] + data[5]) / 2;
+      const rangeVal = max - min;
+      const sum = data.reduce((s, v) => s + v, 0);
+      const mean = Math.round(sum / n * 10) / 10;
+      const stemMap = {};
+      data.forEach(v => {
+        const stem = Math.floor(v / 10);
+        const leaf = v % 10;
+        if (!stemMap[stem]) stemMap[stem] = [];
+        stemMap[stem].push(leaf);
+      });
+      const stems = Object.keys(stemMap).sort((a, b) => a - b).map(s => ({
+        stem: Number(s),
+        leaves: stemMap[s].sort((a, b) => a - b),
+      }));
+      return { data, n, min, max, median, rangeVal, sum, mean, stems };
+    },
+    steps: [
+      {
+        prompt: 'What is the **range** of the scores?',
+        computeAnswer: (p) => p.rangeVal,
+        acceptFormats: ['integer'],
+        hint: '**Range** = last value − first value in the **stem-and-leaf plot**.',
+        theory: '**Range** = {max} − {min} = {rangeVal}.',
+        formula: 'Range = max − min',
+        miniExample: 'From 62 to 94, range = 94 − 62 = 32.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+      {
+        prompt: 'What is the **median**? (With {n} values, average the 5th and 6th.)',
+        computeAnswer: (p) => p.median,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Count to the 5th and 6th values in the plot, then average them.',
+        theory: '**Median** = (5th + 6th values) / 2 = {median}.',
+        formula: 'Median (even n) = (n/2-th + (n/2+1)-th) / 2',
+        miniExample: '10 values: median = average of 5th and 6th values.',
+        visual: 'stem_leaf',
+        visualParams: (p) => ({ stems: p.stems, highlight: null }),
+      },
+    ],
+  },
+
+  // ============ APPROPRIATE DISPLAY (concept: appropriate_display) — Ch 11-8 ============
+  {
+    id: 'display_choose_intervals',
+    concept: 'appropriate_display',
+    difficulty: 1,
+    characterId: 'nithyananda',
+    keywords: ['data_display', 'histogram_kw', 'circle_graph_kw', 'box_and_whisker_kw'],
+    storyTemplate: '{character} has data about shoe prices arranged by price intervals ($0–$29, $30–$59, $60–$89, $90–$119) with the number of shoes in each interval. Which display is best? Type: 1 for Histogram, 2 for Circle Graph, 3 for Box Plot, 4 for Stem-and-Leaf.',
+    paramGenerator: () => ({ answer: 1 }),
+    steps: [
+      {
+        prompt: 'Data is organized by **intervals** with frequencies. Best display? (1=Histogram, 2=Circle Graph, 3=Box Plot, 4=Stem-and-Leaf)',
+        computeAnswer: () => 1,
+        acceptFormats: ['integer'],
+        hint: 'A **histogram** shows frequency data organized by equal **intervals** with bars that touch.',
+        theory: 'The best display is a **histogram** (answer: 1). Histograms are specifically designed to show frequencies across equal intervals, with bars touching to show continuous data.',
+        formula: 'Interval frequency data → Histogram',
+        miniExample: 'Shoe prices in ranges like $0–$29, $30–$59 → use a histogram to show how many shoes fall in each price range.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'display_choose_parts',
+    concept: 'appropriate_display',
+    difficulty: 1,
+    characterId: 'bheema',
+    keywords: ['data_display', 'circle_graph_kw'],
+    storyTemplate: '{character} wants to show what fraction of his monthly food budget goes to each food category (rice, vegetables, fruit, sweets, snacks). The data shows **parts of a whole** that add up to 100%. Which display? Type: 1 for Histogram, 2 for Circle Graph, 3 for Box Plot, 4 for Stem-and-Leaf.',
+    paramGenerator: () => ({ answer: 2 }),
+    steps: [
+      {
+        prompt: 'Data shows **parts of a whole** (percentages that total 100%). Best display? (1=Histogram, 2=Circle Graph, 3=Box Plot, 4=Stem-and-Leaf)',
+        computeAnswer: () => 2,
+        acceptFormats: ['integer'],
+        hint: 'A **circle graph** (pie chart) is designed to show how parts make up a whole.',
+        theory: 'The best display is a **circle graph** (answer: 2). Circle graphs show how each category contributes to the total (100%). Each slice represents a percentage of the whole.',
+        formula: 'Parts of a whole → Circle Graph (Pie Chart)',
+        miniExample: 'Budget: Rice 30%, Veggies 25%, Fruit 15%, Sweets 20%, Snacks 10% → use a circle graph.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'display_choose_spread',
+    concept: 'appropriate_display',
+    difficulty: 1,
+    characterId: 'shakuni',
+    keywords: ['data_display', 'box_and_whisker_kw', 'five_number_summary'],
+    storyTemplate: '{character} Mama wants to show the spread and quartiles of game scores — specifically the minimum, Q1, median, Q3, and maximum. Which display is best? Type: 1 for Histogram, 2 for Circle Graph, 3 for Box Plot, 4 for Stem-and-Leaf.',
+    paramGenerator: () => ({ answer: 3 }),
+    steps: [
+      {
+        prompt: 'Data needs to show **quartiles, median, and spread** (five-number summary). Best display? (1=Histogram, 2=Circle Graph, 3=Box Plot, 4=Stem-and-Leaf)',
+        computeAnswer: () => 3,
+        acceptFormats: ['integer'],
+        hint: 'A **box-and-whisker plot** is specifically designed to show the **five-number summary**.',
+        theory: 'The best display is a **box-and-whisker plot** (answer: 3). It shows the five-number summary: minimum, Q1, median, Q3, maximum — perfect for comparing spread and identifying outliers.',
+        formula: 'Five-number summary / quartile data → Box-and-Whisker Plot',
+        miniExample: 'To compare the spread of two teams\' scores, a box plot shows quartiles and range at a glance.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
 ];
 
 export function getTemplatesByConcept(concept) {
@@ -2256,6 +3562,14 @@ export const concepts = [
   { id: 'sampling', name: 'Sampling', description: 'Using samples to make predictions about populations' },
   { id: 'biased_sampling', name: 'Biased Sampling', description: 'Identifying non-representative samples' },
   { id: 'unbiased_sampling', name: 'Unbiased Sampling', description: 'Random sampling where every member has equal chance' },
+  { id: 'frequency_table', name: 'Frequency Tables', description: 'Organizing data into tables with intervals and counts' },
+  { id: 'histogram', name: 'Histograms', description: 'Bar graphs showing data in contiguous intervals' },
+  { id: 'circle_graph', name: 'Circle Graphs', description: 'Pie charts showing parts of a whole as percentages' },
+  { id: 'central_tendency', name: 'Measures of Central Tendency', description: 'Mean, median, mode, and range' },
+  { id: 'measures_of_variation', name: 'Measures of Variation', description: 'Quartiles, IQR, and outliers' },
+  { id: 'box_and_whisker', name: 'Box-and-Whisker Plots', description: 'Displaying the five-number summary' },
+  { id: 'stem_and_leaf', name: 'Stem-and-Leaf Plots', description: 'Organizing data using place value digits' },
+  { id: 'appropriate_display', name: 'Select Appropriate Display', description: 'Choosing the best graph for different data' },
 ];
 
 export default questionTemplates;

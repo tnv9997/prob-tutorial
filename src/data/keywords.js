@@ -127,6 +127,66 @@ const keywords = {
     term: 'Permutation',
     definition: 'A selection where ORDER MATTERS. Choosing and arranging r items from n: nPr = n! / (n−r)!. Rearranging the same items counts as a different permutation.',
   },
+  mean: {
+    term: 'Mean',
+    definition: 'The average of a data set. Add all the values and divide by how many values there are. Mean = sum of values / number of values.',
+  },
+  median: {
+    term: 'Median',
+    definition: 'The middle value when data is arranged in order from least to greatest. If there are two middle values, the median is their average.',
+  },
+  mode: {
+    term: 'Mode',
+    definition: 'The value that appears MOST OFTEN in a data set. A data set can have one mode, more than one mode, or no mode at all.',
+  },
+  range: {
+    term: 'Range',
+    definition: 'The difference between the greatest and least values in a data set. Range = maximum − minimum. It tells how spread out the data is.',
+  },
+  frequency_table_kw: {
+    term: 'Frequency Table',
+    definition: 'A table that shows how often each value or interval occurs in a data set. Each row has a category/interval, a tally, and a frequency (count).',
+  },
+  histogram_kw: {
+    term: 'Histogram',
+    definition: 'A bar graph that shows the frequency of data in equal intervals. The bars touch each other (no gaps) because the intervals are continuous.',
+  },
+  circle_graph_kw: {
+    term: 'Circle Graph',
+    definition: 'A graph (also called a pie chart) that shows data as parts of a whole. Each section represents a percentage, and all sections add up to 100%.',
+  },
+  quartile: {
+    term: 'Quartile',
+    definition: 'Values that divide an ordered data set into four equal parts. Q1 is the median of the lower half, Q2 is the overall median, Q3 is the median of the upper half.',
+  },
+  interquartile_range: {
+    term: 'Interquartile Range (IQR)',
+    definition: 'The range of the middle 50% of data. IQR = Q3 − Q1. A smaller IQR means the middle data is clustered closely together.',
+  },
+  outlier: {
+    term: 'Outlier',
+    definition: 'A data value that is much greater or much less than most of the data. A value is an outlier if it is more than 1.5 × IQR below Q1 or above Q3.',
+  },
+  box_and_whisker_kw: {
+    term: 'Box-and-Whisker Plot',
+    definition: 'A display that shows the five-number summary (minimum, Q1, median, Q3, maximum) of a data set. The box shows the middle 50%, and the whiskers extend to the extremes.',
+  },
+  stem_and_leaf_kw: {
+    term: 'Stem-and-Leaf Plot',
+    definition: 'A display where each data value is split into a stem (leading digits) and a leaf (last digit). It shows the shape of the data while keeping the original values.',
+  },
+  interval: {
+    term: 'Interval',
+    definition: 'A range of values used to group data. For example, 10–19, 20–29, etc. Intervals should be equal in size and should not overlap.',
+  },
+  five_number_summary: {
+    term: 'Five-Number Summary',
+    definition: 'The five key values that describe a data set: minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum.',
+  },
+  data_display: {
+    term: 'Data Display',
+    definition: 'A visual way to show data — such as a histogram, circle graph, box plot, stem-and-leaf plot, or line graph. Different displays work best for different types of data.',
+  },
 };
 
 export function getKeywordDefs(keywordIds) {

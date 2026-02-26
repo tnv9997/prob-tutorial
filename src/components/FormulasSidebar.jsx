@@ -61,6 +61,40 @@ const FORMULA_SECTIONS = [
       'Biased sample \u2192 unreliable predictions',
     ],
   },
+  {
+    title: 'Frequency Tables & Histograms',
+    formulas: [
+      'Frequency = count in an interval',
+      'Relative Freq = frequency / total',
+      'Percent = (part / total) \u00D7 100',
+    ],
+  },
+  {
+    title: 'Circle Graphs',
+    formulas: [
+      'Degrees = (percent / 100) \u00D7 360',
+      'All sections sum to 100% (360\u00B0)',
+      'Missing % = 100 \u2212 sum of known %',
+    ],
+  },
+  {
+    title: 'Central Tendency',
+    formulas: [
+      'Mean = sum of values / count',
+      'Median = middle value (sorted data)',
+      'Mode = most frequent value',
+      'Range = max \u2212 min',
+    ],
+  },
+  {
+    title: 'Variation & Box Plots',
+    formulas: [
+      'Q1 = median of lower half',
+      'Q3 = median of upper half',
+      'IQR = Q3 \u2212 Q1',
+      'Outlier if < Q1\u22121.5\u00D7IQR or > Q3+1.5\u00D7IQR',
+    ],
+  },
 ];
 
 export default function FormulasSidebar() {

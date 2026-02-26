@@ -399,6 +399,248 @@ function DiceSumTableVisual({ params }) {
   );
 }
 
+function HistogramVisual({ params }) {
+  const { intervals = [], highlight } = params;
+  if (intervals.length === 0) return null;
+
+  const maxCount = Math.max(...intervals.map(d => d.count));
+  const barWidth = 60;
+  const leftPad = 35;
+  const chartWidth = leftPad + intervals.length * barWidth + 20;
+  const chartHeight = 200;
+  const maxBarHeight = 120;
+  const barBase = chartHeight - 45;
+
+  return (
+    <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="visual-svg" preserveAspectRatio="xMidYMid meet">
+      {/* Y-axis */}
+      <line x1={leftPad - 2} y1={barBase - maxBarHeight - 5} x2={leftPad - 2} y2={barBase} stroke="#9CA3AF" strokeWidth="1.5" />
+      {/* X-axis */}
+      <line x1={leftPad - 2} y1={barBase} x2={chartWidth - 10} y2={barBase} stroke="#9CA3AF" strokeWidth="1.5" />
+      {/* Y-axis label */}
+      <text x="8" y={barBase - maxBarHeight / 2} textAnchor="middle" fontSize="9" fill="#6B7280"
+        transform={`rotate(-90, 8, ${barBase - maxBarHeight / 2})`}>Frequency</text>
+
+      {intervals.map((item, i) => {
+        const x = leftPad + i * barWidth;
+        const barH = Math.max(4, (item.count / maxCount) * maxBarHeight);
+        const y = barBase - barH;
+        const isHl = highlight != null && (highlight === item.label || highlight === i);
+
+        return (
+          <g key={i}>
+            <rect x={x} y={y} width={barWidth} height={barH}
+              fill={isHl ? '#3B82F6' : '#93C5FD'}
+              stroke={isHl ? '#1D4ED8' : '#fff'}
+              strokeWidth={isHl ? 2.5 : 1} />
+            <text x={x + barWidth / 2} y={y - 5} textAnchor="middle"
+              fontSize="11" fontWeight="700" fill={isHl ? '#1D4ED8' : '#1F2937'}>
+              {item.count}
+            </text>
+            <text x={x + barWidth / 2} y={barBase + 13} textAnchor="middle"
+              fontSize="8" fill="#4B5563" fontWeight="600">
+              {item.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function CircleGraphVisual({ params }) {
+  const { segments = [], highlight } = params;
+  if (segments.length === 0) return null;
+
+  const cx = 120, cy = 110, r = 90;
+  let currentAngle = -Math.PI / 2;
+  const paths = [];
+  const labelElements = [];
+  const defaultColors = ['#3B82F6', '#EF4444', '#22C55E', '#EAB308', '#8B5CF6', '#F97316', '#EC4899', '#14B8A6'];
+
+  segments.forEach((seg, idx) => {
+    const pct = seg.percent;
+    if (pct <= 0) return;
+    const angle = (pct / 100) * 2 * Math.PI;
+    const x1 = cx + r * Math.cos(currentAngle);
+    const y1 = cy + r * Math.sin(currentAngle);
+    const x2 = cx + r * Math.cos(currentAngle + angle);
+    const y2 = cy + r * Math.sin(currentAngle + angle);
+    const largeArc = angle > Math.PI ? 1 : 0;
+    const isHl = highlight && (highlight === seg.label || highlight === idx);
+    const color = seg.color || defaultColors[idx % defaultColors.length];
+
+    paths.push(
+      <path key={idx}
+        d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${largeArc},1 ${x2},${y2} Z`}
+        fill={color}
+        stroke="#fff" strokeWidth="2"
+        opacity={highlight != null && !isHl ? 0.3 : 1}
+      />
+    );
+
+    // Percentage label at midpoint of arc
+    const midAngle = currentAngle + angle / 2;
+    const labelR = r * 0.65;
+    labelElements.push(
+      <text key={`lbl-${idx}`}
+        x={cx + labelR * Math.cos(midAngle)}
+        y={cy + labelR * Math.sin(midAngle) + 4}
+        textAnchor="middle" fontSize="11" fontWeight="bold"
+        fill="#fff" stroke="#00000044" strokeWidth="0.5">
+        {pct}%
+      </text>
+    );
+
+    currentAngle += angle;
+  });
+
+  const legendY = cy + r + 15;
+  const legendCols = Math.min(3, segments.length);
+  const colW = 80;
+
+  return (
+    <svg viewBox={`0 0 ${cx * 2} ${legendY + Math.ceil(segments.length / legendCols) * 16 + 5}`}
+      className="visual-svg" preserveAspectRatio="xMidYMid meet">
+      {paths}
+      {labelElements}
+      {/* Legend */}
+      {segments.map((seg, i) => {
+        const col = i % legendCols;
+        const row = Math.floor(i / legendCols);
+        const color = seg.color || defaultColors[i % defaultColors.length];
+        return (
+          <g key={`leg-${i}`}>
+            <rect x={10 + col * colW} y={legendY + row * 16} width="10" height="10" rx="2" fill={color} />
+            <text x={24 + col * colW} y={legendY + row * 16 + 9} fontSize="9" fill="#4B5563">
+              {seg.label}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function BoxPlotVisual({ params }) {
+  const { min, q1, median, q3, max, outliers = [], highlight } = params;
+  if (min == null || max == null) return null;
+
+  const svgW = 360, svgH = 100;
+  const padL = 30, padR = 30;
+  const plotW = svgW - padL - padR;
+  const cy = 40;
+  const boxH = 30;
+
+  // Determine scale from min to max (including outliers)
+  const allVals = [min, max, ...outliers];
+  const scaleMin = Math.min(...allVals);
+  const scaleMax = Math.max(...allVals);
+  const range = scaleMax - scaleMin || 1;
+
+  const xPos = (val) => padL + ((val - scaleMin) / range) * plotW;
+
+  const hlMedian = highlight === 'median';
+  const hlIQR = highlight === 'iqr';
+  const hlRange = highlight === 'range';
+
+  return (
+    <svg viewBox={`0 0 ${svgW} ${svgH}`} className="visual-svg" preserveAspectRatio="xMidYMid meet">
+      {/* Number line */}
+      <line x1={padL} y1={cy + boxH / 2 + 15} x2={svgW - padR} y2={cy + boxH / 2 + 15}
+        stroke="#D1D5DB" strokeWidth="1" />
+
+      {/* Tick marks and labels */}
+      {[scaleMin, q1, median, q3, scaleMax].map((val, i) => (
+        <g key={i}>
+          <line x1={xPos(val)} y1={cy + boxH / 2 + 12} x2={xPos(val)} y2={cy + boxH / 2 + 18}
+            stroke="#6B7280" strokeWidth="1" />
+          <text x={xPos(val)} y={cy + boxH / 2 + 30} textAnchor="middle"
+            fontSize="10" fill="#374151">{val}</text>
+        </g>
+      ))}
+
+      {/* Left whisker */}
+      <line x1={xPos(min)} y1={cy} x2={xPos(q1)} y2={cy}
+        stroke={hlRange ? '#2563EB' : '#374151'} strokeWidth="2" />
+      <line x1={xPos(min)} y1={cy - 8} x2={xPos(min)} y2={cy + 8}
+        stroke={hlRange ? '#2563EB' : '#374151'} strokeWidth="2" />
+
+      {/* Right whisker */}
+      <line x1={xPos(q3)} y1={cy} x2={xPos(max)} y2={cy}
+        stroke={hlRange ? '#2563EB' : '#374151'} strokeWidth="2" />
+      <line x1={xPos(max)} y1={cy - 8} x2={xPos(max)} y2={cy + 8}
+        stroke={hlRange ? '#2563EB' : '#374151'} strokeWidth="2" />
+
+      {/* Box */}
+      <rect x={xPos(q1)} y={cy - boxH / 2} width={xPos(q3) - xPos(q1)} height={boxH}
+        fill={hlIQR ? '#DBEAFE' : '#E5E7EB'}
+        stroke={hlIQR ? '#2563EB' : '#374151'} strokeWidth={hlIQR ? 2.5 : 2} rx="2" />
+
+      {/* Median line */}
+      <line x1={xPos(median)} y1={cy - boxH / 2} x2={xPos(median)} y2={cy + boxH / 2}
+        stroke={hlMedian ? '#DC2626' : '#DC2626'} strokeWidth={hlMedian ? 3 : 2} />
+
+      {/* Outliers */}
+      {outliers.map((val, i) => (
+        <circle key={`out-${i}`} cx={xPos(val)} cy={cy} r="4"
+          fill="none" stroke="#EF4444" strokeWidth="2" />
+      ))}
+
+      {/* Labels above */}
+      <text x={xPos(min)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Min</text>
+      <text x={xPos(q1)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Q1</text>
+      <text x={xPos(median)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#DC2626" fontWeight="bold">Med</text>
+      <text x={xPos(q3)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Q3</text>
+      <text x={xPos(max)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Max</text>
+    </svg>
+  );
+}
+
+function StemLeafVisual({ params }) {
+  const { stems = [], highlight } = params;
+  if (stems.length === 0) return null;
+
+  const rowH = 20;
+  const svgW = 280;
+  const svgH = stems.length * rowH + 50;
+  const stemX = 60;
+  const dividerX = 80;
+
+  return (
+    <svg viewBox={`0 0 ${svgW} ${svgH}`} className="visual-svg" preserveAspectRatio="xMidYMid meet">
+      {/* Header */}
+      <text x={stemX - 10} y="16" textAnchor="end" fontSize="11" fontWeight="bold" fill="#374151">Stem</text>
+      <text x={dividerX + 8} y="16" textAnchor="start" fontSize="11" fontWeight="bold" fill="#374151">Leaf</text>
+      <line x1={dividerX} y1="4" x2={dividerX} y2={svgH - 5} stroke="#374151" strokeWidth="1.5" />
+      <line x1="10" y1="22" x2={svgW - 10} y2="22" stroke="#D1D5DB" strokeWidth="1" />
+
+      {stems.map((row, i) => {
+        const y = 40 + i * rowH;
+        const isHl = highlight != null && highlight === row.stem;
+        return (
+          <g key={i}>
+            <text x={stemX - 10} y={y} textAnchor="end" fontSize="13"
+              fontWeight={isHl ? 'bold' : '600'} fill={isHl ? '#2563EB' : '#374151'}>
+              {row.stem}
+            </text>
+            <text x={dividerX + 8} y={y} textAnchor="start" fontSize="13"
+              fontWeight={isHl ? 'bold' : 'normal'} fill={isHl ? '#2563EB' : '#374151'}
+              letterSpacing="3">
+              {row.leaves.join(' ')}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Key */}
+      <text x="10" y={svgH - 5} fontSize="9" fill="#6B7280">
+        Key: 5 | 3 = 53
+      </text>
+    </svg>
+  );
+}
+
 export default function Visual({ type, params }) {
   if (!type || !params) return null;
 
@@ -412,6 +654,10 @@ export default function Visual({ type, params }) {
       if (params.type === 'dice_sum') return <DiceSumTableVisual params={params} />;
       if (params.type === 'frequency') return <FrequencyTableVisual params={params} />;
       return null;
+    case 'histogram': return <HistogramVisual params={params} />;
+    case 'circle_graph': return <CircleGraphVisual params={params} />;
+    case 'box_plot': return <BoxPlotVisual params={params} />;
+    case 'stem_leaf': return <StemLeafVisual params={params} />;
     default: return null;
   }
 }

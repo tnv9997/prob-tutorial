@@ -16,6 +16,14 @@ const ALL_CONCEPTS = [
   'sampling',
   'biased_sampling',
   'unbiased_sampling',
+  'frequency_table',
+  'histogram',
+  'circle_graph',
+  'central_tendency',
+  'measures_of_variation',
+  'box_and_whisker',
+  'stem_and_leaf',
+  'appropriate_display',
 ];
 
 // ── Simple middleware: always use default user ────────────────
@@ -169,6 +177,14 @@ router.get('/overall', (req, res) => {
     { id: 'sampling', name: 'Sampling', description: 'Using samples to make predictions about populations' },
     { id: 'biased_sampling', name: 'Biased Sampling', description: 'Identifying non-representative samples' },
     { id: 'unbiased_sampling', name: 'Unbiased Sampling', description: 'Random sampling where every member has equal chance' },
+    { id: 'frequency_table', name: 'Frequency Tables', description: 'Organizing data into tables with intervals and counts' },
+    { id: 'histogram', name: 'Histograms', description: 'Bar graphs showing data in contiguous intervals' },
+    { id: 'circle_graph', name: 'Circle Graphs', description: 'Pie charts showing parts of a whole as percentages' },
+    { id: 'central_tendency', name: 'Measures of Central Tendency', description: 'Mean, median, mode, and range' },
+    { id: 'measures_of_variation', name: 'Measures of Variation', description: 'Quartiles, IQR, and outliers' },
+    { id: 'box_and_whisker', name: 'Box-and-Whisker Plots', description: 'Displaying the five-number summary' },
+    { id: 'stem_and_leaf', name: 'Stem-and-Leaf Plots', description: 'Organizing data using place value digits' },
+    { id: 'appropriate_display', name: 'Select Appropriate Display', description: 'Choosing the best graph for different data' },
   ];
 
   const conceptStats = conceptMeta.map(c => ({
