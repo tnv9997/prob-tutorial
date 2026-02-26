@@ -300,22 +300,27 @@ function TreeVisual({ params }) {
 }
 
 function FrequencyTableVisual({ params }) {
-  const { data = [], highlight } = params;
+  const { data = [], highlight, xLabel } = params;
   if (data.length === 0) return null;
 
   const maxCount = Math.max(...data.map(d => d.count));
   const barWidth = 54;
   const gap = 12;
-  const leftPad = 20;
+  const leftPad = 38;
   const chartWidth = leftPad + data.length * (barWidth + gap) + 20;
-  const chartHeight = 180;
+  const chartHeight = xLabel ? 210 : 195;
   const maxBarHeight = 110;
-  const barBase = chartHeight - 40;
+  const barBase = chartHeight - (xLabel ? 55 : 40);
 
   return (
     <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="visual-svg" preserveAspectRatio="xMidYMid meet">
-      {/* Base line */}
-      <line x1={leftPad - 5} y1={barBase} x2={chartWidth - 10} y2={barBase} stroke="#D1D5DB" strokeWidth="1.5" />
+      {/* Y-axis */}
+      <line x1={leftPad - 5} y1={barBase - maxBarHeight - 5} x2={leftPad - 5} y2={barBase} stroke="#9CA3AF" strokeWidth="1.5" />
+      {/* X-axis */}
+      <line x1={leftPad - 5} y1={barBase} x2={chartWidth - 10} y2={barBase} stroke="#9CA3AF" strokeWidth="1.5" />
+      {/* Y-axis label */}
+      <text x="8" y={barBase - maxBarHeight / 2} textAnchor="middle" fontSize="9" fill="#6B7280"
+        transform={`rotate(-90, 8, ${barBase - maxBarHeight / 2})`}>Count</text>
 
       {data.map((item, i) => {
         const x = leftPad + i * (barWidth + gap);
@@ -340,6 +345,12 @@ function FrequencyTableVisual({ params }) {
           </g>
         );
       })}
+
+      {/* X-axis label */}
+      {xLabel && (
+        <text x={(leftPad + chartWidth - 10) / 2} y={chartHeight - 5} textAnchor="middle"
+          fontSize="10" fill="#6B7280" fontWeight="600">{xLabel}</text>
+      )}
     </svg>
   );
 }
@@ -400,16 +411,16 @@ function DiceSumTableVisual({ params }) {
 }
 
 function HistogramVisual({ params }) {
-  const { intervals = [], highlight } = params;
+  const { intervals = [], highlight, xLabel } = params;
   if (intervals.length === 0) return null;
 
   const maxCount = Math.max(...intervals.map(d => d.count));
   const barWidth = 60;
   const leftPad = 35;
   const chartWidth = leftPad + intervals.length * barWidth + 20;
-  const chartHeight = 200;
+  const chartHeight = xLabel ? 215 : 200;
   const maxBarHeight = 120;
-  const barBase = chartHeight - 45;
+  const barBase = chartHeight - (xLabel ? 58 : 45);
 
   return (
     <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="visual-svg" preserveAspectRatio="xMidYMid meet">
@@ -444,6 +455,12 @@ function HistogramVisual({ params }) {
           </g>
         );
       })}
+
+      {/* X-axis label */}
+      {xLabel && (
+        <text x={(leftPad + chartWidth - 10) / 2} y={chartHeight - 5} textAnchor="middle"
+          fontSize="10" fill="#6B7280" fontWeight="600">{xLabel}</text>
+      )}
     </svg>
   );
 }
@@ -523,10 +540,10 @@ function CircleGraphVisual({ params }) {
 }
 
 function BoxPlotVisual({ params }) {
-  const { min, q1, median, q3, max, outliers = [], highlight } = params;
+  const { min, q1, median, q3, max, outliers = [], highlight, xLabel } = params;
   if (min == null || max == null) return null;
 
-  const svgW = 360, svgH = 100;
+  const svgW = 360, svgH = xLabel ? 115 : 100;
   const padL = 30, padR = 30;
   const plotW = svgW - padL - padR;
   const cy = 40;
@@ -593,6 +610,12 @@ function BoxPlotVisual({ params }) {
       <text x={xPos(median)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#DC2626" fontWeight="bold">Med</text>
       <text x={xPos(q3)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Q3</text>
       <text x={xPos(max)} y={cy - boxH / 2 - 8} textAnchor="middle" fontSize="8" fill="#6B7280">Max</text>
+
+      {/* X-axis label */}
+      {xLabel && (
+        <text x={svgW / 2} y={svgH - 3} textAnchor="middle"
+          fontSize="10" fill="#6B7280" fontWeight="600">{xLabel}</text>
+      )}
     </svg>
   );
 }

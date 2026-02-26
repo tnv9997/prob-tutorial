@@ -666,6 +666,7 @@ const questionTemplates = [
   // ============ EXPERIMENTAL PROBABILITY (concept: experimental) ============
   {
     id: 'exp_bird_watching',
+    xLabel: 'Bird Type',
     concept: 'experimental',
     difficulty: 1,
     characterId: 'shambu',
@@ -735,6 +736,7 @@ const questionTemplates = [
   },
   {
     id: 'exp_food_survey',
+    xLabel: 'Food Type',
     concept: 'experimental',
     difficulty: 1,
     characterId: 'bheema',
@@ -788,6 +790,7 @@ const questionTemplates = [
   },
   {
     id: 'exp_safari_animals',
+    xLabel: 'Animal Type',
     concept: 'experimental',
     difficulty: 2,
     characterId: 'shambu',
@@ -840,6 +843,7 @@ const questionTemplates = [
   // ============ THEORETICAL VS EXPERIMENTAL (concept: theoretical_vs_experimental) ============
   {
     id: 'theo_vs_exp_die',
+    xLabel: 'Die Face',
     concept: 'theoretical_vs_experimental',
     difficulty: 2,
     characterId: 'shakuni',
@@ -904,6 +908,7 @@ const questionTemplates = [
   },
   {
     id: 'theo_vs_exp_coin',
+    xLabel: 'Outcome',
     concept: 'theoretical_vs_experimental',
     difficulty: 1,
     characterId: 'mahisha',
@@ -1396,6 +1401,7 @@ const questionTemplates = [
   // ============ SURVEYING (concept: surveying) ============
   {
     id: 'survey_food_preference',
+    xLabel: 'Snack',
     concept: 'surveying',
     difficulty: 1,
     characterId: 'bheema',
@@ -1475,6 +1481,7 @@ const questionTemplates = [
   },
   {
     id: 'survey_transport',
+    xLabel: 'Transport',
     concept: 'surveying',
     difficulty: 2,
     characterId: 'mahisha',
@@ -1550,6 +1557,7 @@ const questionTemplates = [
   },
   {
     id: 'survey_bird_habitat',
+    xLabel: 'Bird Species',
     concept: 'surveying',
     difficulty: 1,
     characterId: 'shambu',
@@ -1626,6 +1634,7 @@ const questionTemplates = [
   // ============ SAMPLING (concept: sampling) ============
   {
     id: 'sampling_cricket_preference',
+    xLabel: 'Sport',
     concept: 'sampling',
     difficulty: 1,
     characterId: 'mahisha',
@@ -1701,6 +1710,7 @@ const questionTemplates = [
   },
   {
     id: 'sampling_candy_quality',
+    xLabel: 'Condition',
     concept: 'sampling',
     difficulty: 2,
     characterId: 'suppandi',
@@ -1773,6 +1783,7 @@ const questionTemplates = [
   },
   {
     id: 'sampling_wildlife_count',
+    xLabel: 'Status',
     concept: 'sampling',
     difficulty: 2,
     characterId: 'shambu',
@@ -1825,6 +1836,7 @@ const questionTemplates = [
   // ============ BIASED SAMPLING (concept: biased_sampling) ============
   {
     id: 'biased_lunch_survey',
+    xLabel: 'Food',
     concept: 'biased_sampling',
     difficulty: 2,
     characterId: 'bheema',
@@ -1890,6 +1902,7 @@ const questionTemplates = [
   },
   {
     id: 'biased_game_poll',
+    xLabel: 'Response',
     concept: 'biased_sampling',
     difficulty: 2,
     characterId: 'shakuni',
@@ -1951,6 +1964,7 @@ const questionTemplates = [
   },
   {
     id: 'biased_online_review',
+    xLabel: 'Rating',
     concept: 'biased_sampling',
     difficulty: 3,
     characterId: 'nithyananda',
@@ -2027,6 +2041,7 @@ const questionTemplates = [
   // ============ UNBIASED SAMPLING (concept: unbiased_sampling) ============
   {
     id: 'unbiased_class_lottery',
+    xLabel: 'Event',
     concept: 'unbiased_sampling',
     difficulty: 1,
     characterId: 'mahisha',
@@ -2092,6 +2107,7 @@ const questionTemplates = [
   },
   {
     id: 'unbiased_fruit_inspection',
+    xLabel: 'Ripeness',
     concept: 'unbiased_sampling',
     difficulty: 2,
     characterId: 'bheema',
@@ -2155,6 +2171,7 @@ const questionTemplates = [
   },
   {
     id: 'unbiased_vs_biased_comparison',
+    xLabel: 'Sample',
     concept: 'unbiased_sampling',
     difficulty: 3,
     characterId: 'nithyananda',
@@ -2237,11 +2254,22 @@ const questionTemplates = [
   // ============ FREQUENCY TABLES (concept: frequency_table) — Ch 11-1 ============
   {
     id: 'freq_table_animal_lengths',
+    xLabel: 'Length (in.)',
     concept: 'frequency_table',
     difficulty: 1,
     characterId: 'shambu',
     keywords: ['frequency_table_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName} is studying lizards in the desert! He recorded the lengths (in inches) of ${p.total} lizards he found. The data is organized in a **frequency table** with intervals. The intervals are: 1.0–2.9 (${p.freq1} lizards), 3.0–4.9 (${p.freq2} lizards), 5.0–6.9 (${p.freq3} lizards), and 7.0–8.9 (${p.freq4} lizards).`,
+    storyTemplateFn: (p, charName) => `${charName} is studying lizards in the desert! He recorded the lengths (in inches) of ${p.total} lizards and organized the data in the **frequency table** shown below.`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '1.0–2.9', count: p.freq1 },
+        { label: '3.0–4.9', count: p.freq2 },
+        { label: '5.0–6.9', count: p.freq3 },
+        { label: '7.0–8.9', count: p.freq4 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const freq1 = 3 + Math.floor(Math.random() * 5);
       const freq2 = 4 + Math.floor(Math.random() * 6);
@@ -2306,11 +2334,23 @@ const questionTemplates = [
   },
   {
     id: 'freq_table_book_prices',
+    xLabel: 'Price ($)',
     concept: 'frequency_table',
     difficulty: 1,
     characterId: 'suppandi',
     keywords: ['frequency_table_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName}'s boss sent him to organize a used book sale. He sorted ${p.total} books by price into a **frequency table**: $1.00–$1.99 (${p.f1} books), $2.00–$2.99 (${p.f2} books), $3.00–$3.99 (${p.f3} books), $4.00–$4.99 (${p.f4} books), $5.00–$5.99 (${p.f5} books). "See boss, all sorted!"`,
+    storyTemplateFn: (p, charName) => `${charName}'s boss sent him to organize a used book sale. He sorted ${p.total} books by price into the **frequency table** shown below. "See boss, all sorted!"`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '$1–$1.99', count: p.f1 },
+        { label: '$2–$2.99', count: p.f2 },
+        { label: '$3–$3.99', count: p.f3 },
+        { label: '$4–$4.99', count: p.f4 },
+        { label: '$5–$5.99', count: p.f5 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const f1 = 2 + Math.floor(Math.random() * 4);
       const f2 = 3 + Math.floor(Math.random() * 5);
@@ -2369,11 +2409,23 @@ const questionTemplates = [
   },
   {
     id: 'freq_table_test_scores',
+    xLabel: 'Score',
     concept: 'frequency_table',
     difficulty: 2,
     characterId: 'mahisha',
     keywords: ['frequency_table_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName} organized a math quiz competition! He recorded ${p.total} students' scores in a **frequency table**: 50–59 (${p.f1} students), 60–69 (${p.f2} students), 70–79 (${p.f3} students), 80–89 (${p.f4} students), 90–100 (${p.f5} students).`,
+    storyTemplateFn: (p, charName) => `${charName} organized a math quiz competition! He recorded ${p.total} students' scores in the **frequency table** shown below.`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '50–59', count: p.f1 },
+        { label: '60–69', count: p.f2 },
+        { label: '70–79', count: p.f3 },
+        { label: '80–89', count: p.f4 },
+        { label: '90–100', count: p.f5 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const f1 = 1 + Math.floor(Math.random() * 3);
       const f2 = 3 + Math.floor(Math.random() * 4);
@@ -2423,11 +2475,23 @@ const questionTemplates = [
   // ============ HISTOGRAMS (concept: histogram) — Ch 11-2 ============
   {
     id: 'histogram_game_scores',
+    xLabel: 'Score',
     concept: 'histogram',
     difficulty: 1,
     characterId: 'shakuni',
     keywords: ['histogram_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName} Mama is analyzing scores from a board game tournament! A **histogram** shows the winning scores: 0–9 (${p.f1} games), 10–19 (${p.f2} games), 20–29 (${p.f3} games), 30–39 (${p.f4} games), 40–49 (${p.f5} games).`,
+    storyTemplateFn: (p, charName) => `${charName} Mama is analyzing scores from a board game tournament! The winning scores are shown in the **histogram** below.`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '0–9', count: p.f1 },
+        { label: '10–19', count: p.f2 },
+        { label: '20–29', count: p.f3 },
+        { label: '30–39', count: p.f4 },
+        { label: '40–49', count: p.f5 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const f1 = 1 + Math.floor(Math.random() * 3);
       const f2 = 3 + Math.floor(Math.random() * 5);
@@ -2483,11 +2547,23 @@ const questionTemplates = [
   },
   {
     id: 'histogram_ages',
+    xLabel: 'Age',
     concept: 'histogram',
     difficulty: 1,
     characterId: 'mahisha',
     keywords: ['histogram_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName} is organizing a community event! He made a **histogram** of attendee ages: 10–19 (${p.f1} people), 20–29 (${p.f2} people), 30–39 (${p.f3} people), 40–49 (${p.f4} people), 50–59 (${p.f5} people).`,
+    storyTemplateFn: (p, charName) => `${charName} is organizing a community event! He made a **histogram** of attendee ages, shown below.`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '10–19', count: p.f1 },
+        { label: '20–29', count: p.f2 },
+        { label: '30–39', count: p.f3 },
+        { label: '40–49', count: p.f4 },
+        { label: '50–59', count: p.f5 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const f1 = 4 + Math.floor(Math.random() * 6);
       const f2 = 6 + Math.floor(Math.random() * 8);
@@ -2546,11 +2622,22 @@ const questionTemplates = [
   },
   {
     id: 'histogram_temperatures',
+    xLabel: 'Temperature (°F)',
     concept: 'histogram',
     difficulty: 2,
     characterId: 'shambu',
     keywords: ['histogram_kw', 'interval', 'frequency'],
-    storyTemplateFn: (p, charName) => `${charName} tracked daily high temperatures (°F) while camping for ${p.total} days. His **histogram**: 60–69°F (${p.f1} days), 70–79°F (${p.f2} days), 80–89°F (${p.f3} days), 90–99°F (${p.f4} days).`,
+    storyTemplateFn: (p, charName) => `${charName} tracked daily high temperatures (°F) while camping for ${p.total} days. His **histogram** is shown below.`,
+    storyVisual: 'histogram',
+    storyVisualParams: (p) => ({
+      intervals: [
+        { label: '60–69°F', count: p.f1 },
+        { label: '70–79°F', count: p.f2 },
+        { label: '80–89°F', count: p.f3 },
+        { label: '90–99°F', count: p.f4 },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const f1 = 2 + Math.floor(Math.random() * 4);
       const f2 = 4 + Math.floor(Math.random() * 6);
@@ -2602,7 +2689,18 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'nithyananda',
     keywords: ['circle_graph_kw'],
-    storyTemplateFn: (p, charName) => `${charName} is studying a **circle graph** showing energy sources for a city. The graph shows: Solar ${p.solar}%, Wind ${p.wind}%, Coal ${p.coal}%, Natural Gas ${p.gas}%, and Other is the remaining percent.`,
+    storyTemplateFn: (p, charName) => `${charName} is studying a **circle graph** showing energy sources for a city, shown below. The "Other" category is the remaining percent.`,
+    storyVisual: 'circle_graph',
+    storyVisualParams: (p) => ({
+      segments: [
+        { label: 'Solar', percent: p.solar, color: '#EAB308' },
+        { label: 'Wind', percent: p.wind, color: '#3B82F6' },
+        { label: 'Coal', percent: p.coal, color: '#6B7280' },
+        { label: 'Gas', percent: p.gas, color: '#F97316' },
+        { label: 'Other', percent: Math.max(1, p.other), color: '#22C55E' },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const solar = 10 + Math.floor(Math.random() * 15);
       const wind = 10 + Math.floor(Math.random() * 15);
@@ -2661,7 +2759,18 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'suppandi',
     keywords: ['circle_graph_kw'],
-    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to make a **circle graph** of how he spends his day. ${charName} reported: Sleeping ${p.sleep}%, Working ${p.work}%, Eating ${p.eat}%, Playing ${p.play}%, and the rest is "Thinking about marbles."`,
+    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to make a **circle graph** of how he spends his day, shown below. The rest of the time is "Thinking about marbles."`,
+    storyVisual: 'circle_graph',
+    storyVisualParams: (p) => ({
+      segments: [
+        { label: 'Sleeping', percent: p.sleep, color: '#6366F1' },
+        { label: 'Working', percent: p.work, color: '#F97316' },
+        { label: 'Eating', percent: p.eat, color: '#EAB308' },
+        { label: 'Playing', percent: p.play, color: '#22C55E' },
+        { label: 'Marbles', percent: Math.max(1, p.marbles), color: '#EC4899' },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const sleep = 30 + Math.floor(Math.random() * 8);
       const work = 20 + Math.floor(Math.random() * 10);
@@ -2720,7 +2829,18 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'bheema',
     keywords: ['circle_graph_kw'],
-    storyTemplateFn: (p, charName) => `${charName} made a **circle graph** of his monthly food budget of $${p.budget}: Rice & Grains ${p.grains}%, Vegetables ${p.veg}%, Fruits ${p.fruit}%, Sweets ${p.sweets}%, and Snacks make up the rest.`,
+    storyTemplateFn: (p, charName) => `${charName} made a **circle graph** of his monthly food budget of $${p.budget}, shown below. Snacks make up the rest.`,
+    storyVisual: 'circle_graph',
+    storyVisualParams: (p) => ({
+      segments: [
+        { label: 'Grains', percent: p.grains, color: '#D97706' },
+        { label: 'Veggies', percent: p.veg, color: '#22C55E' },
+        { label: 'Fruits', percent: p.fruit, color: '#EF4444' },
+        { label: 'Sweets', percent: p.sweets, color: '#EC4899' },
+        { label: 'Snacks', percent: Math.max(1, p.snacks), color: '#8B5CF6' },
+      ],
+      highlight: null,
+    }),
     paramGenerator: () => {
       const grains = 25 + Math.floor(Math.random() * 10);
       const veg = 15 + Math.floor(Math.random() * 10);
@@ -2778,6 +2898,7 @@ const questionTemplates = [
   // ============ CENTRAL TENDENCY (concept: central_tendency) — Ch 11-4 ============
   {
     id: 'central_prices',
+    xLabel: 'Price ($)',
     concept: 'central_tendency',
     difficulty: 1,
     characterId: 'suppandi',
@@ -2834,6 +2955,7 @@ const questionTemplates = [
   },
   {
     id: 'central_quiz_scores',
+    xLabel: 'Score',
     concept: 'central_tendency',
     difficulty: 1,
     characterId: 'mahisha',
@@ -2877,6 +2999,7 @@ const questionTemplates = [
   },
   {
     id: 'central_animal_data',
+    xLabel: 'Length (in.)',
     concept: 'central_tendency',
     difficulty: 2,
     characterId: 'shambu',
@@ -2944,6 +3067,7 @@ const questionTemplates = [
   // ============ MEASURES OF VARIATION (concept: measures_of_variation) — Ch 11-5 ============
   {
     id: 'variation_animal_weights',
+    xLabel: 'Weight (lb)',
     concept: 'measures_of_variation',
     difficulty: 2,
     characterId: 'shambu',
@@ -3003,6 +3127,7 @@ const questionTemplates = [
   },
   {
     id: 'variation_temperatures',
+    xLabel: 'Temperature (°F)',
     concept: 'measures_of_variation',
     difficulty: 2,
     characterId: 'nithyananda',
@@ -3068,6 +3193,7 @@ const questionTemplates = [
   },
   {
     id: 'variation_race_times',
+    xLabel: 'Time (s)',
     concept: 'measures_of_variation',
     difficulty: 2,
     characterId: 'mahisha',
@@ -3136,11 +3262,17 @@ const questionTemplates = [
   // ============ BOX-AND-WHISKER PLOTS (concept: box_and_whisker) — Ch 11-6 ============
   {
     id: 'box_ages',
+    xLabel: 'Age (years)',
     concept: 'box_and_whisker',
     difficulty: 1,
     characterId: 'mahisha',
     keywords: ['box_and_whisker_kw', 'five_number_summary', 'quartile', 'median'],
-    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of the ages of ${p.n} children signed up for swimming. The five-number summary is: Min = ${p.min}, Q1 = ${p.q1}, Median = ${p.median}, Q3 = ${p.q3}, Max = ${p.max}.`,
+    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of the ages of ${p.n} children signed up for swimming, shown below.`,
+    storyVisual: 'box_plot',
+    storyVisualParams: (p) => ({
+      min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+      highlight: null,
+    }),
     paramGenerator: () => {
       const n = 10;
       const data = [];
@@ -3202,11 +3334,17 @@ const questionTemplates = [
   },
   {
     id: 'box_prices',
+    xLabel: 'Price ($)',
     concept: 'box_and_whisker',
     difficulty: 2,
     characterId: 'suppandi',
     keywords: ['box_and_whisker_kw', 'quartile', 'interquartile_range', 'median'],
-    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of bicycle prices at a sale. Min = $${p.min}, Q1 = $${p.q1}, Median = $${p.median}, Q3 = $${p.q3}, Max = $${p.max}. "Boss, the box tells us everything!"`,
+    storyTemplateFn: (p, charName) => `${charName} made a **box-and-whisker plot** of bicycle prices at a sale, shown below. "Boss, the box tells us everything!"`,
+    storyVisual: 'box_plot',
+    storyVisualParams: (p) => ({
+      min: p.min, q1: p.q1, median: p.median, q3: p.q3, max: p.max,
+      highlight: null,
+    }),
     paramGenerator: () => {
       const min = 100 + Math.floor(Math.random() * 20) * 5;
       const q1 = min + 10 + Math.floor(Math.random() * 5) * 5;
@@ -3250,11 +3388,17 @@ const questionTemplates = [
   },
   {
     id: 'box_compare',
+    xLabel: 'Score',
     concept: 'box_and_whisker',
     difficulty: 2,
     characterId: 'shakuni',
     keywords: ['box_and_whisker_kw', 'quartile', 'interquartile_range', 'range'],
-    storyTemplateFn: (p, charName) => `${charName} Mama is comparing scores from two board games using **box-and-whisker plots**. Game A: Min=${p.aMin}, Q1=${p.aQ1}, Median=${p.aMed}, Q3=${p.aQ3}, Max=${p.aMax}. Game B: Min=${p.bMin}, Q1=${p.bQ1}, Median=${p.bMed}, Q3=${p.bQ3}, Max=${p.bMax}.`,
+    storyTemplateFn: (p, charName) => `${charName} Mama is comparing scores from two board games using **box-and-whisker plots**. Game A is shown below. Game B: Min=${p.bMin}, Q1=${p.bQ1}, Median=${p.bMed}, Q3=${p.bQ3}, Max=${p.bMax}.`,
+    storyVisual: 'box_plot',
+    storyVisualParams: (p) => ({
+      min: p.aMin, q1: p.aQ1, median: p.aMed, q3: p.aQ3, max: p.aMax,
+      highlight: null,
+    }),
     paramGenerator: () => {
       const aMin = 10 + Math.floor(Math.random() * 10);
       const aQ1 = aMin + 5 + Math.floor(Math.random() * 5);
@@ -3312,7 +3456,9 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'shakuni',
     keywords: ['stem_and_leaf_kw', 'median', 'range'],
-    storyTemplateFn: (p, charName) => `${charName} Mama recorded scores from a card game tournament in a **stem-and-leaf plot**. The data has ${p.n} values ranging from ${p.min} to ${p.max}.`,
+    storyTemplateFn: (p, charName) => `${charName} Mama recorded scores from a card game tournament in the **stem-and-leaf plot** shown below.`,
+    storyVisual: 'stem_leaf',
+    storyVisualParams: (p) => ({ stems: p.stems, highlight: null }),
     paramGenerator: () => {
       const n = 11;
       const data = [];
@@ -3378,7 +3524,9 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'bheema',
     keywords: ['stem_and_leaf_kw', 'median', 'mode'],
-    storyTemplateFn: (p, charName) => `${charName} listed food item prices (in dollars) in a **stem-and-leaf plot**. There are ${p.n} items with prices from $${p.min} to $${p.max}.`,
+    storyTemplateFn: (p, charName) => `${charName} listed food item prices (in dollars) in the **stem-and-leaf plot** shown below.`,
+    storyVisual: 'stem_leaf',
+    storyVisualParams: (p) => ({ stems: p.stems, highlight: null }),
     paramGenerator: () => {
       const n = 9;
       const data = [];
@@ -3434,7 +3582,9 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'mahisha',
     keywords: ['stem_and_leaf_kw', 'median', 'range', 'mean'],
-    storyTemplateFn: (p, charName) => `${charName} organized test scores for ${p.n} athletes into a **stem-and-leaf plot**. Scores range from ${p.min} to ${p.max}.`,
+    storyTemplateFn: (p, charName) => `${charName} organized test scores for ${p.n} athletes into the **stem-and-leaf plot** shown below.`,
+    storyVisual: 'stem_leaf',
+    storyVisualParams: (p) => ({ stems: p.stems, highlight: null }),
     paramGenerator: () => {
       const n = 10;
       const data = [];

@@ -598,6 +598,12 @@ body {
   line-height: 1.5;
 }
 
+.step-visual {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+}
+
 .step-form {
   display: flex;
   gap: 8px;

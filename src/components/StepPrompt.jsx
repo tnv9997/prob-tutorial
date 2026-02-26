@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Explanation from './Explanation.jsx';
+import Visual from './Visual.jsx';
 import { validateAnswer, formatAnswer } from '../engine/validator.js';
 import { playDing, getEncouragement } from '../utils/sound.js';
 import { matchKeyword } from '../data/conceptExplanations.js';
@@ -123,6 +124,12 @@ export default function StepPrompt({ step, stepNumber, totalSteps, onComplete, q
       </div>
 
       <p className="step-question">{renderBoldText(step.prompt, onKeywordClick)}</p>
+
+      {step.visual && step.visualParams && (
+        <div className="step-visual">
+          <Visual type={step.visual} params={step.visualParams} />
+        </div>
+      )}
 
       {feedback && (
         <div className={`feedback ${feedbackClass}`}>

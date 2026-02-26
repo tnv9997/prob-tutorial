@@ -56,6 +56,9 @@ export function generateQuestion(template, providedParams = null) {
       return filled;
     };
 
+    const vp = step.visualParams ? step.visualParams(params) : null;
+    if (vp && template.xLabel) vp.xLabel = template.xLabel;
+
     return {
       index,
       prompt: fillParams(step.prompt),
@@ -66,9 +69,12 @@ export function generateQuestion(template, providedParams = null) {
       formula: fillParams(step.formula || ''),
       miniExample: fillParams(step.miniExample || ''),
       visual: step.visual,
-      visualParams: step.visualParams ? step.visualParams(params) : null,
+      visualParams: vp,
     };
   });
+
+  const storyVP = template.storyVisualParams ? template.storyVisualParams(params) : null;
+  if (storyVP && template.xLabel) storyVP.xLabel = template.xLabel;
 
   return {
     id: `${template.id}_${Date.now()}`,
@@ -81,6 +87,6 @@ export function generateQuestion(template, providedParams = null) {
     keywords: template.keywords || [],
     params,
     storyVisual: template.storyVisual || null,
-    storyVisualParams: template.storyVisualParams ? template.storyVisualParams(params) : null,
+    storyVisualParams: storyVP,
   };
 }
