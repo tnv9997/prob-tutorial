@@ -6,3 +6,4 @@ dist
 .env
 .app-launch.log
 .app-pids
+.claude/
