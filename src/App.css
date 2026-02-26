@@ -799,6 +799,125 @@ body {
   font-weight: 700;
 }
 
+.keyword-clickable {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  transition: background 0.15s, text-decoration 0.15s;
+}
+
+.keyword-clickable:hover {
+  background: #D4E5FF;
+  text-decoration: underline solid;
+  text-underline-offset: 3px;
+}
+
+/* ============ CONCEPT POPOVER ============ */
+.concept-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+  padding: 24px;
+}
+
+.concept-popover {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  max-width: 480px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+  animation: scaleIn 0.2s ease;
+}
+
+.concept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.concept-header h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
+}
+
+.concept-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.concept-close:hover {
+  color: var(--text);
+}
+
+.concept-definition {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--info-bg);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary);
+}
+
+.concept-visual {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+
+.concept-example {
+  background: #F0FDF4;
+  border: 1.5px solid #BBF7D0;
+  border-left: 4px solid #22C55E;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.concept-example-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #15803D;
+  margin-bottom: 4px;
+}
+
+.concept-example-text {
+  font-size: 14px;
+  color: #166534;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.concept-solution {
+  font-size: 14px;
+  color: #14532D;
+  font-weight: 700;
+  line-height: 1.6;
+  font-family: 'Courier New', Courier, monospace;
+  margin: 0;
+}
+
 /* ============ KEYWORD GLOSSARY ============ */
 .keyword-glossary {
   margin-top: 14px;

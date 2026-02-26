@@ -3,11 +3,13 @@ import CharacterBadge from './CharacterBadge.jsx';
 import StepPrompt from './StepPrompt.jsx';
 import CountdownTimer from './CountdownTimer.jsx';
 import Calculator from './Calculator.jsx';
+import ConceptPopover from './ConceptPopover.jsx';
 import { selectAndGenerateQuestion } from '../engine/selector.js';
 import { recordStepResult, recordQuestionHistory } from '../engine/mastery.js';
 import { concepts, getTemplateById } from '../data/questionTemplates.js';
 import { generateQuestion } from '../engine/generator.js';
 import { playLevelUp } from '../utils/sound.js';
+import { matchKeyword } from '../data/conceptExplanations.js';
 
 export default function QuestionScreen() {
   const [question, setQuestion] = useState(null);
@@ -17,6 +19,7 @@ export default function QuestionScreen() {
   const [loading, setLoading] = useState(false);
   const [insertValue, setInsertValue] = useState(null);
   const [insertTrigger, setInsertTrigger] = useState(0);
+  const [activeKeyword, setActiveKeyword] = useState(null);
   const questionStartRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -144,13 +147,21 @@ export default function QuestionScreen() {
     setInsertTrigger(t => t + 1);
   };
 
-  /** Parse **bold** markers in text */
-  const renderBoldText = (text) => {
+  /** Parse **bold** markers in text — clickable if keyword matches */
+  const renderBoldText = (text, onKeywordClick) => {
     if (!text) return null;
     const parts = text.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="keyword-highlight">{part.slice(2, -2)}</strong>;
+        const inner = part.slice(2, -2);
+        const kwId = onKeywordClick ? matchKeyword(inner) : null;
+        if (kwId) {
+          return (
+            <span key={i} className="keyword-highlight keyword-clickable"
+              onClick={() => onKeywordClick(kwId)}>{inner}</span>
+          );
+        }
+        return <strong key={i} className="keyword-highlight">{inner}</strong>;
       }
       return <span key={i}>{part}</span>;
     });
@@ -168,7 +179,7 @@ export default function QuestionScreen() {
       <CharacterBadge character={question.character} />
 
       <div className="story-box">
-        <p className="story-text">{renderBoldText(question.story)}</p>
+        <p className="story-text">{renderBoldText(question.story, setActiveKeyword)}</p>
       </div>
 
       <StepPrompt
@@ -180,6 +191,7 @@ export default function QuestionScreen() {
         questionKeywords={question.keywords}
         insertValue={insertValue}
         insertTrigger={insertTrigger}
+        onKeywordClick={setActiveKeyword}
       />
 
       {needsCalculator && (
@@ -193,6 +205,10 @@ export default function QuestionScreen() {
           Skip to New Question
         </button>
       </div>
+
+      {activeKeyword && (
+        <ConceptPopover keywordId={activeKeyword} onClose={() => setActiveKeyword(null)} />
+      )}
     </div>
   );
 }

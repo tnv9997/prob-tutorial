@@ -2,20 +2,29 @@ import React, { useState, useRef, useEffect } from 'react';
 import Explanation from './Explanation.jsx';
 import { validateAnswer, formatAnswer } from '../engine/validator.js';
 import { playDing, getEncouragement } from '../utils/sound.js';
+import { matchKeyword } from '../data/conceptExplanations.js';
 
-/** Parse **bold** markers in prompt text */
-function renderBoldText(text) {
+/** Parse **bold** markers in prompt text — clickable if keyword matches */
+function renderBoldText(text, onKeywordClick) {
   if (!text) return null;
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
-      return <strong key={i} className="keyword-highlight">{part.slice(2, -2)}</strong>;
+      const inner = part.slice(2, -2);
+      const kwId = onKeywordClick ? matchKeyword(inner) : null;
+      if (kwId) {
+        return (
+          <span key={i} className="keyword-highlight keyword-clickable"
+            onClick={() => onKeywordClick(kwId)}>{inner}</span>
+        );
+      }
+      return <strong key={i} className="keyword-highlight">{inner}</strong>;
     }
     return <span key={i}>{part}</span>;
   });
 }
 
-export default function StepPrompt({ step, stepNumber, totalSteps, onComplete, questionKeywords, insertValue, insertTrigger }) {
+export default function StepPrompt({ step, stepNumber, totalSteps, onComplete, questionKeywords, insertValue, insertTrigger, onKeywordClick }) {
   const [input, setInput] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [feedback, setFeedback] = useState(null);
@@ -113,7 +122,7 @@ export default function StepPrompt({ step, stepNumber, totalSteps, onComplete, q
         </div>
       </div>
 
-      <p className="step-question">{renderBoldText(step.prompt)}</p>
+      <p className="step-question">{renderBoldText(step.prompt, onKeywordClick)}</p>
 
       {feedback && (
         <div className={`feedback ${feedbackClass}`}>
@@ -132,6 +141,7 @@ export default function StepPrompt({ step, stepNumber, totalSteps, onComplete, q
           formula={explanation.formula}
           miniExample={explanation.miniExample}
           keywords={explanation.keywords}
+          onKeywordClick={onKeywordClick}
         />
       )}
 

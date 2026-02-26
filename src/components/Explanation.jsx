@@ -1,21 +1,29 @@
 import React from 'react';
 import Visual from './Visual.jsx';
 import { getKeywordDefs } from '../data/keywords.js';
+import { matchKeyword } from '../data/conceptExplanations.js';
 
-/** Parse **bold** markers into <strong> elements */
-function renderBoldText(text) {
+/** Parse **bold** markers — clickable if keyword matches */
+function renderBoldText(text, onKeywordClick) {
   if (!text) return null;
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       const inner = part.slice(2, -2);
+      const kwId = onKeywordClick ? matchKeyword(inner) : null;
+      if (kwId) {
+        return (
+          <span key={i} className="keyword-highlight keyword-clickable"
+            onClick={() => onKeywordClick(kwId)}>{inner}</span>
+        );
+      }
       return <strong key={i} className="keyword-highlight">{inner}</strong>;
     }
     return <span key={i}>{part}</span>;
   });
 }
 
-export default function Explanation({ type, text, visual, visualParams, answer, formula, miniExample, keywords }) {
+export default function Explanation({ type, text, visual, visualParams, answer, formula, miniExample, keywords, onKeywordClick }) {
   const config = {
     hint: { label: 'Hint', className: 'explanation-hint', icon: '💡' },
     theory: { label: 'Concept Review', className: 'explanation-theory', icon: '📖' },
@@ -32,7 +40,7 @@ export default function Explanation({ type, text, visual, visualParams, answer, 
         <strong>{label}</strong>
       </div>
 
-      <p className="explanation-text">{renderBoldText(text)}</p>
+      <p className="explanation-text">{renderBoldText(text, onKeywordClick)}</p>
 
       {answer && (
         <p className="explanation-answer-text">
@@ -43,14 +51,14 @@ export default function Explanation({ type, text, visual, visualParams, answer, 
       {formula && (
         <div className="formula-box">
           <div className="formula-label">Formula</div>
-          <div className="formula-content">{renderBoldText(formula)}</div>
+          <div className="formula-content">{renderBoldText(formula, onKeywordClick)}</div>
         </div>
       )}
 
       {miniExample && (
         <div className="mini-example">
           <div className="mini-example-label">Mini Example</div>
-          <div className="mini-example-content">{renderBoldText(miniExample)}</div>
+          <div className="mini-example-content">{renderBoldText(miniExample, onKeywordClick)}</div>
         </div>
       )}
 
