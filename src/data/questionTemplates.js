@@ -2782,7 +2782,9 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'suppandi',
     keywords: ['mean', 'median', 'mode', 'range'],
-    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to find the average price of backpacks in the store. The prices (in dollars) are: ${p.data.join(', ')}. "Average? I'll just pick the middle one!" said ${charName}. Let's help him do it properly.`,
+    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to find the average price of backpacks in the store. The prices (in dollars) are shown below. "Average? I'll just pick the middle one!" said ${charName}. Let's help him do it properly.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: '$' + v, count: v })) }),
     paramGenerator: () => {
       const n = 5;
       const data = [];
@@ -2836,7 +2838,9 @@ const questionTemplates = [
     difficulty: 1,
     characterId: 'mahisha',
     keywords: ['mean', 'median', 'mode'],
-    storyTemplateFn: (p, charName) => `${charName} recorded quiz scores for 7 students: ${p.data.join(', ')}. He needs to find the **median** score to give an award to the "middle" student.`,
+    storyTemplateFn: (p, charName) => `${charName} recorded quiz scores for 7 students, shown below. He needs to find the **median** score to give an award to the "middle" student.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: String(v), count: v })) }),
     paramGenerator: () => {
       const data = [];
       for (let i = 0; i < 7; i++) data.push(5 + Math.floor(Math.random() * 11));
@@ -2877,7 +2881,9 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'shambu',
     keywords: ['mean', 'median', 'mode', 'range'],
-    storyTemplateFn: (p, charName) => `${charName} measured the lengths (in inches) of ${p.n} fish he caught: ${p.data.join(', ')}. He wants to describe this data using **measures of central tendency**.`,
+    storyTemplateFn: (p, charName) => `${charName} measured the lengths (in inches) of ${p.n} fish he caught, shown below. He wants to describe this data using **measures of central tendency**.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: v + '"', count: v })) }),
     paramGenerator: () => {
       const n = 8;
       const base = 8 + Math.floor(Math.random() * 5);
@@ -2942,7 +2948,9 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'shambu',
     keywords: ['range', 'quartile', 'interquartile_range', 'median'],
-    storyTemplateFn: (p, charName) => `${charName} weighed ${p.n} wild cats (in pounds): ${p.data.join(', ')}. He wants to describe the spread using **measures of variation**.`,
+    storyTemplateFn: (p, charName) => `${charName} weighed ${p.n} wild cats (in pounds), shown below. He wants to describe the spread using **measures of variation**.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: v + ' lb', count: v })) }),
     paramGenerator: () => {
       const n = 8;
       const data = [];
@@ -2999,7 +3007,9 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'nithyananda',
     keywords: ['range', 'quartile', 'interquartile_range', 'outlier'],
-    storyTemplateFn: (p, charName) => `${charName} recorded 8 daily temperatures (°F): ${p.data.join(', ')}. "The stars tell me there is an unusual value here!" Let's use **measures of variation** to investigate.`,
+    storyTemplateFn: (p, charName) => `${charName} recorded 8 daily temperatures (°F), shown below. "The stars tell me there is an unusual value here!" Let's use **measures of variation** to investigate.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: v + '°', count: v })) }),
     paramGenerator: () => {
       const data = [];
       const base = 65 + Math.floor(Math.random() * 10);
@@ -3062,7 +3072,9 @@ const questionTemplates = [
     difficulty: 2,
     characterId: 'mahisha',
     keywords: ['range', 'quartile', 'interquartile_range', 'five_number_summary'],
-    storyTemplateFn: (p, charName) => `${charName} timed ${p.n} runners (in seconds): ${p.data.join(', ')}. He needs the **five-number summary** to make a box plot.`,
+    storyTemplateFn: (p, charName) => `${charName} timed ${p.n} runners (in seconds), shown below. He needs the **five-number summary** to make a box plot.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: v + 's', count: v })) }),
     paramGenerator: () => {
       const n = 10;
       const data = [];

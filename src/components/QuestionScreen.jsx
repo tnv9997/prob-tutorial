@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import CharacterBadge from './CharacterBadge.jsx';
+import Visual from './Visual.jsx';
 import StepPrompt from './StepPrompt.jsx';
 import CountdownTimer from './CountdownTimer.jsx';
 import Calculator from './Calculator.jsx';
@@ -180,6 +181,11 @@ export default function QuestionScreen() {
 
       <div className="story-box">
         <p className="story-text">{renderBoldText(question.story, setActiveKeyword)}</p>
+        {question.storyVisual && question.storyVisualParams && (
+          <div className="story-visual">
+            <Visual type={question.storyVisual} params={question.storyVisualParams} />
+          </div>
+        )}
       </div>
 
       <StepPrompt

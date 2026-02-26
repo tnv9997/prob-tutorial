@@ -538,6 +538,12 @@ body {
   color: var(--text);
 }
 
+.story-visual {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
 /* ============ STEP PROMPT ============ */
 .step-prompt {
   background: var(--card);

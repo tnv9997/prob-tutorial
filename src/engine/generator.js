@@ -22,6 +22,7 @@ export function generateQuestion(template, providedParams = null) {
 
   // Build derived params for hints/theory text
   const derivedParams = { ...params };
+  derivedParams.character = character.name;
   if (params.red !== undefined) derivedParams.red_minus_1 = params.red - 1;
   if (params.total !== undefined) derivedParams.total_minus_1 = params.total - 1;
   if (params.hearts !== undefined) derivedParams.hearts_minus_1 = params.hearts - 1;
@@ -46,6 +47,11 @@ export function generateQuestion(template, providedParams = null) {
       // Handle array display for targets
       if (params.targets) {
         filled = filled.replace(/\{targets\}/g, params.targets.join(', '));
+      }
+      // Handle array display for data
+      if (params.data) {
+        filled = filled.replace(/\{data\}/g, params.data.join(', '));
+        filled = filled.replace(/\{data\[(\d+)\]\}/g, (_, i) => String(params.data[Number(i)] ?? ''));
       }
       return filled;
     };
@@ -74,5 +80,7 @@ export function generateQuestion(template, providedParams = null) {
     steps,
     keywords: template.keywords || [],
     params,
+    storyVisual: template.storyVisual || null,
+    storyVisualParams: template.storyVisualParams ? template.storyVisualParams(params) : null,
   };
 }
