@@ -187,6 +187,38 @@ const keywords = {
     term: 'Data Display',
     definition: 'A visual way to show data — such as a histogram, circle graph, box plot, stem-and-leaf plot, or line graph. Different displays work best for different types of data.',
   },
+  gross_pay: {
+    term: 'Gross Pay',
+    definition: 'Total earnings before any deductions are taken out. Gross pay = hourly wage × hours worked (or the full salary amount).',
+  },
+  net_pay: {
+    term: 'Net Pay',
+    definition: 'Take-home pay after all deductions (taxes, insurance, etc.) are subtracted from gross pay. Net pay = gross pay − total deductions.',
+  },
+  tax: {
+    term: 'Tax',
+    definition: 'A percentage of income paid to the government. Tax amount = gross pay × tax rate. Common types include income tax and sales tax.',
+  },
+  deduction: {
+    term: 'Deduction',
+    definition: 'An amount subtracted from gross pay before you receive your paycheck. Examples include taxes, health insurance, and retirement contributions.',
+  },
+  budget_kw: {
+    term: 'Budget',
+    definition: 'A plan for how to spend and save money. A budget divides income into categories (needs, wants, savings) that should add up to 100% of income.',
+  },
+  simple_interest: {
+    term: 'Simple Interest',
+    definition: 'Interest earned only on the original principal amount. Formula: I = P × r × t, where P = principal, r = annual rate (as a decimal), t = time in years.',
+  },
+  compound_interest: {
+    term: 'Compound Interest',
+    definition: 'Interest earned on the principal PLUS previously earned interest. Each period, interest is calculated on the new, larger balance. Money grows faster than with simple interest.',
+  },
+  principal: {
+    term: 'Principal',
+    definition: 'The original amount of money invested or borrowed, before any interest is added. In the formula I = P × r × t, P stands for principal.',
+  },
 };
 
 export function getKeywordDefs(keywordIds) {

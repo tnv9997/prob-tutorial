@@ -24,6 +24,8 @@ const ALL_CONCEPTS = [
   'box_and_whisker',
   'stem_and_leaf',
   'appropriate_display',
+  'earnings_and_budgets',
+  'financial_planning',
 ];
 
 // ── Simple middleware: always use default user ────────────────
@@ -186,6 +188,8 @@ router.get('/overall', (req, res) => {
     { id: 'box_and_whisker', name: 'Box-and-Whisker Plots', description: 'Displaying the five-number summary' },
     { id: 'stem_and_leaf', name: 'Stem-and-Leaf Plots', description: 'Organizing data using place value digits' },
     { id: 'appropriate_display', name: 'Select Appropriate Display', description: 'Choosing the best graph for different data' },
+    { id: 'earnings_and_budgets', name: 'Earnings & Budgets', description: 'Gross pay, net pay, taxes, and budgeting' },
+    { id: 'financial_planning', name: 'Financial Planning', description: 'Simple interest, compound interest, and savings goals' },
   ];
 
   const conceptStats = conceptMeta.map(c => ({
