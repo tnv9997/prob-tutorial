@@ -82,6 +82,9 @@ const stmts = {
   `),
 
   // History
+  countHistory: db.prepare(
+    'SELECT COUNT(*) as count FROM history WHERE user_id = ?'
+  ),
   getHistory: db.prepare(
     'SELECT * FROM history WHERE user_id = ? ORDER BY created_at DESC LIMIT 100'
   ),

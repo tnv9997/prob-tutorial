@@ -134,6 +134,7 @@ router.get('/detailed-history', (req, res) => {
 // ── Get overall stats (for dashboard) ─────────────────────────
 router.get('/overall', (req, res) => {
   const masteryRows = stmts.getMastery.all(req.userId);
+  const { count: totalQuestionCount } = stmts.countHistory.get(req.userId);
   const historyRows = stmts.getHistory.all(req.userId);
 
   const mastery = {};
@@ -201,7 +202,7 @@ router.get('/overall', (req, res) => {
   }));
 
   res.json({
-    totalQuestions: historyRows.length,
+    totalQuestions: totalQuestionCount,
     totalSteps,
     correctFirstTotal,
     overallAccuracy: totalSteps > 0 ? correctFirstTotal / totalSteps : 0,
