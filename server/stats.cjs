@@ -26,6 +26,7 @@ const ALL_CONCEPTS = [
   'appropriate_display',
   'earnings_and_budgets',
   'financial_planning',
+  'mean_absolute_deviation',
 ];
 
 // ── Simple middleware: always use default user ────────────────
@@ -190,6 +191,7 @@ router.get('/overall', (req, res) => {
     { id: 'appropriate_display', name: 'Select Appropriate Display', description: 'Choosing the best graph for different data' },
     { id: 'earnings_and_budgets', name: 'Earnings & Budgets', description: 'Gross pay, net pay, taxes, and budgeting' },
     { id: 'financial_planning', name: 'Financial Planning', description: 'Simple interest, compound interest, and savings goals' },
+    { id: 'mean_absolute_deviation', name: 'Mean Absolute Deviation', description: 'MAD and comparing data sets' },
   ];
 
   const conceptStats = conceptMeta.map(c => ({

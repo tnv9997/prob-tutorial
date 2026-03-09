@@ -219,6 +219,10 @@ const keywords = {
     term: 'Principal',
     definition: 'The original amount of money invested or borrowed, before any interest is added. In the formula I = P × r × t, P stands for principal.',
   },
+  mad_kw: {
+    term: 'Mean Absolute Deviation (MAD)',
+    definition: 'The average distance of each data value from the mean. MAD = sum of |each value − mean| / number of values. A smaller MAD means data points are closer to the mean.',
+  },
 };
 
 export function getKeywordDefs(keywordIds) {

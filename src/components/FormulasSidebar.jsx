@@ -113,6 +113,14 @@ const FORMULA_SECTIONS = [
       'Savings months = \u2308amount needed / monthly savings\u2309',
     ],
   },
+  {
+    title: 'Mean Absolute Deviation',
+    formulas: [
+      'MAD = sum of |each value \u2212 mean| / count',
+      'Difference of means = |mean\u2081 \u2212 mean\u2082|',
+      'Difference in MADs = difference of means / MAD',
+    ],
+  },
 ];
 
 export default function FormulasSidebar() {

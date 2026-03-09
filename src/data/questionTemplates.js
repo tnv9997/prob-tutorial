@@ -4047,6 +4047,194 @@ const questionTemplates = [
       },
     ],
   },
+
+  // ============ MEAN ABSOLUTE DEVIATION (concept: mean_absolute_deviation) — Activity 26 ============
+  {
+    id: 'mad_calculate',
+    xLabel: 'Price (₹)',
+    concept: 'mean_absolute_deviation',
+    difficulty: 1,
+    characterId: 'suppandi',
+    keywords: ['mean', 'mad_kw'],
+    storyTemplateFn: (p, charName) => `${charName}'s boss asked him to find out how much prices vary at the shop. The prices (in ₹) of ${p.n} items are shown below. "They're all different!" said ${charName}. Let's help him calculate the **Mean Absolute Deviation**.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.data.map(v => ({ label: '₹' + v, count: v })) }),
+    paramGenerator: () => {
+      const n = 5;
+      const data = [];
+      for (let i = 0; i < n; i++) data.push(10 + Math.floor(Math.random() * 40));
+      data.sort((a, b) => a - b);
+      const sum = data.reduce((s, v) => s + v, 0);
+      const mean = Math.round(sum / n * 10) / 10;
+      const absDevs = data.map(v => Math.round(Math.abs(v - mean) * 10) / 10);
+      const sumAbsDevs = Math.round(absDevs.reduce((s, v) => s + v, 0) * 10) / 10;
+      const mad = Math.round(sumAbsDevs / n * 10) / 10;
+      return { data, n, sum, mean, absDevs, sumAbsDevs, mad };
+    },
+    steps: [
+      {
+        prompt: 'What is the **mean** of the prices? (Round to one decimal if needed.)',
+        computeAnswer: (p) => p.mean,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** = sum of all values / count = {sum} / {n}.',
+        theory: '**Mean** = {sum} / {n} = {mean}. This is the center of the data — now we measure how far each value is from it.',
+        formula: 'Mean = sum of values / number of values',
+        miniExample: 'If prices are 10, 20, 30, mean = 60/3 = 20.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the sum of the absolute deviations from the mean? (Round to one decimal.)',
+        computeAnswer: (p) => p.sumAbsDevs,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Find |each value − mean| and add them up. The deviations are: {absDevs}.',
+        theory: 'Absolute deviations: {absDevs}. Sum = {sumAbsDevs}. Each deviation tells how far a value is from the **mean**.',
+        formula: 'Sum of |each value − mean|',
+        miniExample: 'If mean = 20 and data is 10, 20, 30: deviations are |10−20| + |20−20| + |30−20| = 10 + 0 + 10 = 20.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **MAD** (Mean Absolute Deviation)? (Round to one decimal.)',
+        computeAnswer: (p) => p.mad,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**MAD** = sum of absolute deviations / number of values = {sumAbsDevs} / {n}.',
+        theory: '**MAD** = {sumAbsDevs} / {n} = {mad}. On average, each price is about ₹{mad} away from the mean.',
+        formula: 'MAD = sum of |each value − mean| / count',
+        miniExample: 'If sum of deviations = 20 and there are 3 values, MAD = 20/3 ≈ 6.7.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'mad_compare_means',
+    xLabel: 'Score',
+    concept: 'mean_absolute_deviation',
+    difficulty: 1,
+    characterId: 'mahisha',
+    keywords: ['mean', 'mad_kw'],
+    storyTemplateFn: (p, charName) => `${charName} is comparing the battle scores of two demon army teams. Team A scored: ${p.dataA.join(', ')}. Team B scored: ${p.dataB.join(', ')}. He wants to know which team performed better on average.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.dataA.map((v, i) => ({ label: 'A' + (i + 1) + ': ' + v, count: v })).concat(p.dataB.map((v, i) => ({ label: 'B' + (i + 1) + ': ' + v, count: v }))) }),
+    paramGenerator: () => {
+      const nA = 5;
+      const nB = 5;
+      const dataA = [];
+      const dataB = [];
+      for (let i = 0; i < nA; i++) dataA.push(50 + Math.floor(Math.random() * 40));
+      for (let i = 0; i < nB; i++) dataB.push(50 + Math.floor(Math.random() * 40));
+      dataA.sort((a, b) => a - b);
+      dataB.sort((a, b) => a - b);
+      const sumA = dataA.reduce((s, v) => s + v, 0);
+      const sumB = dataB.reduce((s, v) => s + v, 0);
+      const meanA = Math.round(sumA / nA * 10) / 10;
+      const meanB = Math.round(sumB / nB * 10) / 10;
+      const diffMeans = Math.round(Math.abs(meanA - meanB) * 10) / 10;
+      return { dataA, dataB, nA, nB, sumA, sumB, meanA, meanB, diffMeans };
+    },
+    steps: [
+      {
+        prompt: 'What is the **mean** score for Team A? (Round to one decimal.)',
+        computeAnswer: (p) => p.meanA,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** of Team A = sum of Team A scores / number of scores = {sumA} / {nA}.',
+        theory: '**Mean** of Team A = {sumA} / {nA} = {meanA}.',
+        formula: 'Mean = sum / count',
+        miniExample: 'Scores 60, 70, 80 → mean = 210/3 = 70.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **mean** score for Team B? (Round to one decimal.)',
+        computeAnswer: (p) => p.meanB,
+        acceptFormats: ['decimal', 'integer'],
+        hint: '**Mean** of Team B = sum of Team B scores / number of scores = {sumB} / {nB}.',
+        theory: '**Mean** of Team B = {sumB} / {nB} = {meanB}.',
+        formula: 'Mean = sum / count',
+        miniExample: 'Scores 55, 65, 75 → mean = 195/3 = 65.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **difference** between the two means? (Use |mean A − mean B|, round to one decimal.)',
+        computeAnswer: (p) => p.diffMeans,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Difference = |{meanA} − {meanB}|.',
+        theory: 'Difference of means = |{meanA} − {meanB}| = {diffMeans}. This tells us how far apart the two teams\' averages are.',
+        formula: 'Difference of means = |mean₁ − mean₂|',
+        miniExample: 'If mean A = 72 and mean B = 65, difference = |72 − 65| = 7.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
+  {
+    id: 'mad_interpret_difference',
+    xLabel: 'Count',
+    concept: 'mean_absolute_deviation',
+    difficulty: 2,
+    characterId: 'shambu',
+    keywords: ['mean', 'mad_kw'],
+    storyTemplateFn: (p, charName) => `${charName} counted wildlife at two parks over ${p.n} days. Park A counts: ${p.dataA.join(', ')}. Park B counts: ${p.dataB.join(', ')}. He wants to know if the difference in averages is meaningful by comparing it to the **MAD**.`,
+    storyVisual: 'table',
+    storyVisualParams: (p) => ({ type: 'frequency', data: p.dataA.map((v, i) => ({ label: 'A' + (i + 1) + ': ' + v, count: v })).concat(p.dataB.map((v, i) => ({ label: 'B' + (i + 1) + ': ' + v, count: v }))) }),
+    paramGenerator: () => {
+      const n = 6;
+      const dataA = [];
+      const dataB = [];
+      for (let i = 0; i < n; i++) dataA.push(10 + Math.floor(Math.random() * 30));
+      for (let i = 0; i < n; i++) dataB.push(10 + Math.floor(Math.random() * 30));
+      dataA.sort((a, b) => a - b);
+      dataB.sort((a, b) => a - b);
+      const sumA = dataA.reduce((s, v) => s + v, 0);
+      const sumB = dataB.reduce((s, v) => s + v, 0);
+      const meanA = Math.round(sumA / n * 10) / 10;
+      const meanB = Math.round(sumB / n * 10) / 10;
+      const diffMeans = Math.round(Math.abs(meanA - meanB) * 10) / 10;
+      // Compute MAD for combined / use Park A's MAD as the reference
+      const absDevsA = dataA.map(v => Math.round(Math.abs(v - meanA) * 10) / 10);
+      const madA = Math.round(absDevsA.reduce((s, v) => s + v, 0) / n * 10) / 10;
+      // Express difference as multiple of MAD (round to 1 decimal)
+      const madMultiple = madA > 0 ? Math.round(diffMeans / madA * 10) / 10 : 0;
+      return { dataA, dataB, n, sumA, sumB, meanA, meanB, diffMeans, madA, madMultiple };
+    },
+    steps: [
+      {
+        prompt: 'What is the **difference of means** between Park A and Park B? (Round to one decimal.)',
+        computeAnswer: (p) => p.diffMeans,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Find mean of each park first: Mean A = {sumA}/{n} = {meanA}, Mean B = {sumB}/{n} = {meanB}. Then find |Mean A − Mean B|.',
+        theory: 'Mean A = {meanA}, Mean B = {meanB}. Difference = |{meanA} − {meanB}| = {diffMeans}.',
+        formula: 'Difference of means = |mean₁ − mean₂|',
+        miniExample: 'If Park A mean = 22 and Park B mean = 18, difference = |22 − 18| = 4.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'What is the **MAD** of Park A\'s data? (Round to one decimal.)',
+        computeAnswer: (p) => p.madA,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Find |each Park A value − mean A|, add them up, and divide by {n}. Mean A = {meanA}.',
+        theory: 'MAD of Park A = sum of |each value − {meanA}| / {n} = {madA}. This measures the typical spread in Park A\'s data.',
+        formula: 'MAD = sum of |each value − mean| / count',
+        miniExample: 'If mean = 20 and data is 15, 20, 25: MAD = (5 + 0 + 5) / 3 ≈ 3.3.',
+        visual: null,
+        visualParams: () => null,
+      },
+      {
+        prompt: 'Express the difference of means as a multiple of the MAD. (Round to one decimal.)',
+        computeAnswer: (p) => p.madMultiple,
+        acceptFormats: ['decimal', 'integer'],
+        hint: 'Multiple = difference of means / MAD = {diffMeans} / {madA}.',
+        theory: 'Multiple = {diffMeans} / {madA} = {madMultiple} MADs. If this is 2 or more, the difference is likely meaningful; if less than 1, the difference may just be due to variability.',
+        formula: 'Difference in MADs = difference of means / MAD',
+        miniExample: 'If difference = 8 and MAD = 4, the difference is 8/4 = 2 MADs — a meaningful gap.',
+        visual: null,
+        visualParams: () => null,
+      },
+    ],
+  },
 ];
 
 export function getTemplatesByConcept(concept) {
@@ -4079,6 +4267,7 @@ export const concepts = [
   { id: 'appropriate_display', name: 'Select Appropriate Display', description: 'Choosing the best graph for different data' },
   { id: 'earnings_and_budgets', name: 'Earnings & Budgets', description: 'Gross pay, net pay, taxes, and budgeting' },
   { id: 'financial_planning', name: 'Financial Planning', description: 'Simple interest, compound interest, and savings goals' },
+  { id: 'mean_absolute_deviation', name: 'Mean Absolute Deviation', description: 'MAD and comparing data sets' },
 ];
 
 export default questionTemplates;
