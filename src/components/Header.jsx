@@ -5,7 +5,7 @@ export default function Header({ currentView, onNavigate }) {
     <header className="header">
       <div className="header-title">
         <span className="header-icon">🎯</span>
-        <h1>Probability Prep</h1>
+        <h1>CAASP Prep</h1>
         <span className="header-subtitle">7th Grade CAASP</span>
       </div>
       <nav className="header-nav">
