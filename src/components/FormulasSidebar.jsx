@@ -95,6 +95,24 @@ const FORMULA_SECTIONS = [
       'Outlier if < Q1\u22121.5\u00D7IQR or > Q3+1.5\u00D7IQR',
     ],
   },
+  {
+    title: 'Earnings & Budgets',
+    formulas: [
+      'Gross Pay = wage \u00D7 hours worked',
+      'Tax = Gross Pay \u00D7 (rate / 100)',
+      'Net Pay = Gross Pay \u2212 Total Deductions',
+      'Budget category = income \u00D7 (percent / 100)',
+    ],
+  },
+  {
+    title: 'Financial Planning',
+    formulas: [
+      'Simple Interest: I = P \u00D7 r \u00D7 t',
+      'Total = Principal + Interest',
+      'Compound Interest: A = P \u00D7 (1 + r/100) per year',
+      'Savings months = \u2308amount needed / monthly savings\u2309',
+    ],
+  },
 ];
 
 export default function FormulasSidebar() {
