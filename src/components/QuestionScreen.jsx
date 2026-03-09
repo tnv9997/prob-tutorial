@@ -73,7 +73,7 @@ export default function QuestionScreen() {
       <div className="question-screen empty-state">
         <div className="empty-icon">🎲</div>
         <h2>Ready to Practice?</h2>
-        <p>Test your probability skills with fun story problems!</p>
+        <p>Test your Course 2 CAASP Skills with Suppandi and Friends!</p>
         <button className="btn-primary btn-large" onClick={generateNew} disabled={loading}>
           {loading ? 'Loading...' : 'Start a Question'}
         </button>
