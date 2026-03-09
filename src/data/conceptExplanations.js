@@ -610,6 +610,111 @@ const conceptExplanations = {
       solution: 'A circle graph (pie chart) is best for showing parts of a whole, since sections add to 100%.',
     },
   },
+  gross_pay: {
+    term: keywords.gross_pay.term,
+    definition: keywords.gross_pay.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'You earn ₹150 per hour and work 8 hours. What is your gross pay?',
+      solution: 'Gross pay = ₹150 × 8 = ₹1200. This is before any deductions.',
+    },
+  },
+  net_pay: {
+    term: keywords.net_pay.term,
+    definition: keywords.net_pay.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'Gross pay is ₹1200 and total deductions are ₹200. What is net pay?',
+      solution: 'Net pay = ₹1200 − ₹200 = ₹1000. This is what you actually take home.',
+    },
+  },
+  tax: {
+    term: keywords.tax.term,
+    definition: keywords.tax.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'Gross pay is ₹1200 and the tax rate is 10%. How much tax do you pay?',
+      solution: 'Tax = ₹1200 × 10/100 = ₹120.',
+    },
+  },
+  deduction: {
+    term: keywords.deduction.term,
+    definition: keywords.deduction.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'Your paycheck has ₹120 in taxes and ₹80 in insurance. What are total deductions?',
+      solution: 'Total deductions = ₹120 + ₹80 = ₹200. These are subtracted from gross pay.',
+    },
+  },
+  budget_kw: {
+    term: keywords.budget_kw.term,
+    definition: keywords.budget_kw.definition,
+    visual: 'circle_graph',
+    visualParams: {
+      segments: [
+        { label: 'Needs', percent: 50 },
+        { label: 'Wants', percent: 30 },
+        { label: 'Savings', percent: 20 },
+      ],
+    },
+    example: {
+      title: 'Example',
+      text: 'You earn ₹1000. Your budget: 50% needs, 30% wants, 20% savings. How much for each?',
+      solution: 'Needs = ₹500, Wants = ₹300, Savings = ₹200. Total = ₹1000 (100%).',
+    },
+  },
+  simple_interest: {
+    term: keywords.simple_interest.term,
+    definition: keywords.simple_interest.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'You invest ₹1000 at 5% per year for 3 years. What is the simple interest?',
+      solution: 'I = P × r × t = ₹1000 × 0.05 × 3 = ₹150. Total = ₹1000 + ₹150 = ₹1150.',
+    },
+  },
+  compound_interest: {
+    term: keywords.compound_interest.term,
+    definition: keywords.compound_interest.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'You invest ₹1000 at 10% compound interest for 2 years.',
+      solution: 'Year 1: ₹1000 × 1.10 = ₹1100. Year 2: ₹1100 × 1.10 = ₹1210. Interest earned on interest!',
+    },
+  },
+  principal: {
+    term: keywords.principal.term,
+    definition: keywords.principal.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'You deposit ₹500 in a savings account. What is the principal?',
+      solution: 'The principal is ₹500 — the original amount before any interest is added.',
+    },
+  },
+  mad_kw: {
+    term: keywords.mad_kw.term,
+    definition: keywords.mad_kw.definition,
+    visual: null,
+    visualParams: null,
+    example: {
+      title: 'Example',
+      text: 'Data: 10, 14, 16, 20. Mean = 15. Find the MAD.',
+      solution: 'Deviations: |10−15|=5, |14−15|=1, |16−15|=1, |20−15|=5. MAD = (5+1+1+5)/4 = 3.',
+    },
+  },
 };
 
 /**
@@ -620,6 +725,10 @@ const termToId = {};
 Object.entries(keywords).forEach(([id, kw]) => {
   termToId[kw.term.toLowerCase()] = id;
 });
+// Aliases for bold text that doesn't exactly match keyword terms
+termToId['deductions'] = 'deduction';
+termToId['mad'] = 'mad_kw';
+termToId['mean absolute deviation'] = 'mad_kw';
 
 /**
  * Match display text (from **bold** markers) to a keyword ID.
