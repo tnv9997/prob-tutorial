@@ -729,6 +729,7 @@ Object.entries(keywords).forEach(([id, kw]) => {
 termToId['deductions'] = 'deduction';
 termToId['mad'] = 'mad_kw';
 termToId['mean absolute deviation'] = 'mad_kw';
+termToId['parts of a whole'] = 'circle_graph_kw';
 
 /**
  * Match display text (from **bold** markers) to a keyword ID.
